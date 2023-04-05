@@ -103,7 +103,7 @@ void tree_eval (struct tree* myTree, FILE* Equation, int myTreeHead) {
 
 void print_node (struct node elem, FILE* Equation) {
     if (elem.type_of_value == NUMBER) {
-        fprintf (Equation, "push %f\n", elem.value.number);
+        fprintf (Equation, "push %.0f\n", elem.value.number);
     } else if (elem.type_of_value == OPERATION) {
         switch (elem.value.operation) {
             case '*':

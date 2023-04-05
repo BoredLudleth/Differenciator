@@ -11,9 +11,12 @@ DBG
 DBG
     graph_dump (myTree);
 
-    FILE* Equation = fopen ("asmeq.asm", "w+");
+    FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
     tree_eval (myTree, Equation);
 DBG
+    fprintf (Equation, "out\n");
+    fprintf (Equation, "hlt\n");
+    fclose (Equation);
     treeDtor (myTree);
 
     return 0;

@@ -18,6 +18,12 @@ differenciator.o: differenciator.cpp
 
 run_bintree: main.o bintree.o differenciator.o
 	g++ main.o bintree.o differenciator.o -o main
+
+run_programm:
+	./main
+	cd CPU
+	echo ./run_coder
+	echo ./run_stack
 	
 clean:
 	rm *.o *.exe
