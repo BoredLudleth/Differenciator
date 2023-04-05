@@ -23,20 +23,21 @@ union value{
     char variable;
 };
 
+enum TypeOfValue {
+    FREE = -1,
+    NUMBER    = 0,
+    OPERATION = 1,
+    VARIABLE  = 2
+};
+
 struct node
 {
-    int type_of_value;
+    int type_of_value = FREE;
     union value value;
 
 
     int lefty = 0;
     int righty = 0;
-};
-
-enum TypeOfValue {
-    NUMBER    = 0,
-    OPERATION = 1,
-    VARIABLE  = 2
 };
 
 struct tree 
