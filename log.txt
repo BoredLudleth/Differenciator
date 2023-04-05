@@ -1,0 +1,30 @@
+LOG-file started
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 5.000000
+Adding new element to the tree
+Added number in right: 7.000000
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Added number in left: 7.000000
+Adding new element to the tree
+Added number in right: 8.000000
+Adding new element to the tree
+Added operation  - in right
+Adding new element to the tree
+Tree resizing..
+Added operation  / in left
+Adding new element to the tree
+Added number in left: 3.000000
+Adding new element to the tree
+Added number in right: 11.000000
+Adding new element to the tree
+Added number in right: 11.000000
+Graph dump!
+Tree destroyed

@@ -1,0 +1,20 @@
+digraph TB
+{
+node [shape=record fontname=Arial];
+edge [dir=both, style="", constraint=false, color = darkred]rankdir = LR;
+splines = "ortho"
+head [label = "HEAD", style = filled, fillcolor = "#d01234"];
+node0 [label = "{<f1> value = 0|  <f2> addr = 0| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node1 [label = "{<f1> value = 1|  <f2> addr = 1| {<f3> left = 2 |<f4> right = 3}| <f5> free = -1}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node2 [label = "{<f1> value = 2|  <f2> addr = 2| {<f3> left = 4 |<f4> right = 0}| <f5> free = -1}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node3 [label = "{<f1> value = 3|  <f2> addr = 3| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node4 [label = "{<f1> value = 4|  <f2> addr = 4| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node5 [label = "{<f1> value = 0|  <f2> addr = 5| {<f3> left = 0 |<f4> right = 0}| <f5> free = 6}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node6 [label = "{<f1> value = 0|  <f2> addr = 6| {<f3> left = 0 |<f4> right = 0}| <f5> free = 7}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node7 [label = "{<f1> value = 0|  <f2> addr = 7| {<f3> left = 0 |<f4> right = 0}| <f5> free = 8}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node8 [label = "{<f1> value = 0|  <f2> addr = 8| {<f3> left = 0 |<f4> right = 0}| <f5> free = 9}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node9 [label = "{<f1> value = 0|  <f2> addr = 9| {<f3> left = 0 |<f4> right = 0}| <f5> free = 0}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node1 -> node2[dir=both, style=filled, constraint=true];
+node1 -> node3[dir=both, style=filled, constraint=true];
+node2 -> node4[dir=both, style=filled, constraint=true];
+}
