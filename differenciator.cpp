@@ -25,11 +25,13 @@ DBG
 DBG
     if (typeOfNode == NUMBER) {
         sscanf (myTree->allText, TYPE_DESIG, &value.number);
-        findScope (myTree);
     } else if (typeOfNode == OPERATION) {
-        sscanf (myTree->allText, "%c", &value.operation);
-        findScope (myTree);
-    }
+        sscanf (myTree->allText, "%c", &value.operation);           //if parent is number or operation it shouldn't have children
+    } else if (typeOfNode == VARIABLE) {
+        sscanf (myTree->allText, "%c", &value.variable);
+    }                                                               //what if it's another thing -> error
+
+    findScope (myTree);
 DBG
     treeCtor (myTree, typeOfNode, value);
 DBG
@@ -58,7 +60,10 @@ void fillingTree (struct tree* myTree, int parent) {
         } else if (type == OPERATION) {
             sscanf (myTree->allText, "%c", &value.operation);
             printf ("eaten op is %c\n", value.operation);
-        }
+        } else if (type == VARIABLE) {
+            sscanf (myTree->allText, "%c", &value.variable);
+            printf ("eaten op is %c\n", value.variable);            
+        } 
 
         findScope (myTree);
 
@@ -78,8 +83,10 @@ void fillingTree (struct tree* myTree, int parent) {
 int selectType (struct tree* myTree) {
     if (myTree->allText[myTree->currentSym] <= '9' && myTree->allText[myTree->currentSym] >= '0') {
         return 0;
+    } else if (myTree->allText[myTree->currentSym] >= 'a' && myTree->allText[myTree->currentSym] <= 'z') {
+        return 2;           // variable 
     }
-    return 1;
+    return 1;               // operation
 }
 
 void findScope (struct tree* myTree) {

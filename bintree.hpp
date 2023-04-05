@@ -10,7 +10,6 @@
 
 #define POISON 0xBAD
 
-
 typedef float type;
 #define TYPE_DESIG "%f"
 #define TYPE_DESIG_FOR_PRINT "%5f"
@@ -21,11 +20,11 @@ typedef float type;
 union value{
     float number;
     char operation;
+    char variable;
 };
 
 struct node
 {
-    // type value;
     int type_of_value;
     union value value;
 
@@ -36,7 +35,8 @@ struct node
 
 enum TypeOfValue {
     NUMBER    = 0,
-    OPERATION = 1
+    OPERATION = 1,
+    VARIABLE  = 2
 };
 
 struct tree 
@@ -57,6 +57,10 @@ struct tree
     int currentSym = 0;
 
     FILE* log_file;                 //upgrate log-file
+
+    // char** varLabels = nullptr;
+    // int numberOfLabels = MAX_DIF_LABELS;
+    // int currentNumLabels = 0;
 };
 
 

@@ -6,9 +6,9 @@ Added operation  * in left
 Adding new element to the tree
 Added operation  + in left
 Adding new element to the tree
-Added number in left: 5.000000
+Added number in left: x
 Adding new element to the tree
-Added number in right: 7.000000
+Added number in right: y
 Adding new element to the tree
 Added operation  * in right
 Adding new element to the tree

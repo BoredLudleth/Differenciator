@@ -9,6 +9,7 @@ void treeCtor (struct tree* myTree, int type, union value value) {
 
     myTree->data = (node*) calloc (myTree->size, sizeof (node));
     myTree->free = (int*) calloc (myTree->size, sizeof (int));
+    // myTree->varLabels = (char**) calloc (myTree->numberOfLabels, sizeof (char*));
 
     myTree->free[0] = -1;
     myTree->free[1] = -1;
@@ -18,6 +19,8 @@ void treeCtor (struct tree* myTree, int type, union value value) {
         myTree->data[myTree->free_node].value.operation = value.operation; 
     } else  if (type == NUMBER){
         myTree->data[myTree->free_node].value.number = value.number;
+    } else if (type == VARIABLE) {
+        myTree->data[myTree->free_node].value.variable = value.variable;
     }
 
     myTree->data[1].type_of_value  = type;
@@ -107,6 +110,13 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
         return -1;
     }
 
+    if (myTree->data[parent].type_of_value == VARIABLE) {
+        printf ("We didn't add your value in tree, because the parent is variable!\n");
+        fprintf (myTree->log_file, "We didn't add your value in tree, because the parent is variable!\n");
+
+        return -1;
+    }
+
     if (myTree->free_node == 0) {
         DBG
 
@@ -134,6 +144,10 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
                 myTree->data[myTree->free_node].value.number  = value.number;
                 printf ("Added in left: %f\n", value.number);
                 fprintf (myTree->log_file, "Added number in left: %f\n", value.number);
+            } else if (type == VARIABLE) {
+                myTree->data[myTree->free_node].value.variable = value.variable;
+                printf ("Added in left: %c\n", value.variable);
+                fprintf (myTree->log_file, "Added number in left: %c\n", value.variable);
             }
 
             myTree->data[myTree->free_node].type_of_value  = type;
@@ -153,6 +167,10 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
                 myTree->data[myTree->free_node].value.number  = value.number;
                 printf ("Added in right: %f\n", value.number);
                 fprintf (myTree->log_file, "Added number in right: %f\n", value.number);
+            } else if (type == VARIABLE) {
+                myTree->data[myTree->free_node].value.variable = value.variable;
+                printf ("Added in right: %c\n", value.variable);
+                fprintf (myTree->log_file, "Added number in right: %c\n", value.variable);
             }
 
             myTree->data[myTree->free_node].type_of_value  = type;
@@ -240,6 +258,9 @@ DBG
             fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
                     i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
  
+        }else if (myTree->data[i].type_of_value == VARIABLE) {
+            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
+                    i, myTree->data[i].value.variable, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
         }
     }
 
