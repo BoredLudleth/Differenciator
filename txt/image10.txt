@@ -24,10 +24,10 @@ node17 [label = "{<f1> value = 7.000000|  <f2> addr = 17| {<f3> left = 0 |<f4> r
 node18 [label = "{<f1> value = +|  <f2> addr = 18| {<f3> left = 19 |<f4> right = 20}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
 node19 [label = "{<f1> value = x|  <f2> addr = 19| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6> var}", shape=record, style = filled, fillcolor = "#00cf00"];
 node20 [label = "{<f1> value = y|  <f2> addr = 20| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6> var}", shape=record, style = filled, fillcolor = "#00cf00"];
-node21 [label = "{<f1> value = -|  <f2> addr = 21| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
-node22 [label = "{<f1> value = 2989.000000|  <f2> addr = 22| {<f3> left = 0 |<f4> right = 0}| <f5> free = 23| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
-node23 [label = "{<f1> value = 2989.000000|  <f2> addr = 23| {<f3> left = 0 |<f4> right = 0}| <f5> free = 24| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
-node24 [label = "{<f1> value = 2989.000000|  <f2> addr = 24| {<f3> left = 0 |<f4> right = 0}| <f5> free = 25| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
+node21 [label = "{<f1> value = -|  <f2> addr = 21| {<f3> left = 22 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node22 [label = "{<f1> value = /|  <f2> addr = 22| {<f3> left = 23 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node23 [label = "{<f1> value = -|  <f2> addr = 23| {<f3> left = 24 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node24 [label = "{<f1> value = *|  <f2> addr = 24| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
 node25 [label = "{<f1> value = 2989.000000|  <f2> addr = 25| {<f3> left = 0 |<f4> right = 0}| <f5> free = 26| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
 node26 [label = "{<f1> value = 2989.000000|  <f2> addr = 26| {<f3> left = 0 |<f4> right = 0}| <f5> free = 27| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
 node27 [label = "{<f1> value = 2989.000000|  <f2> addr = 27| {<f3> left = 0 |<f4> right = 0}| <f5> free = 28| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
@@ -63,4 +63,7 @@ node15 -> node16[dir=both, style=filled, constraint=true];
 node15 -> node17[dir=both, style=filled, constraint=true];
 node18 -> node19[dir=both, style=filled, constraint=true];
 node18 -> node20[dir=both, style=filled, constraint=true];
+node21 -> node22[dir=both, style=filled, constraint=true];
+node22 -> node23[dir=both, style=filled, constraint=true];
+node23 -> node24[dir=both, style=filled, constraint=true];
 }

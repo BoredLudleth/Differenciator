@@ -11,14 +11,26 @@ DBG
 DBG
     graph_dump (myTree);
 
-    FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
+    // FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
     // tree_eval (myTree, Equation);
+
+printf ("\n\n\nstart difffff\n\n\n");
+    struct tree deadTree;
+    struct tree* myDiffTree = &deadTree;
+    // treeCtor (myDiffTree, myTree->data[HEAD].type_of_value, myTree->data[HEAD].value);
+    diffTree (myDiffTree, myTree, &(myTree->data[1]));
+    graph_dump (myDiffTree);
+printf ("\n\n\nend difffff\n\n\n");
 DBG
-    fprintf (Equation, "out\n");
-    fprintf (Equation, "hlt\n");
-    fclose (Equation);
+    // fprintf (Equation, "out\n");
+    // fprintf (Equation, "hlt\n");
+    // fclose (Equation);
     treeDtor (myTree);
+    treeDtor (myDiffTree);
 
     return 0;
 }
 // TODO what if operation doesn't exist
+
+
+//TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

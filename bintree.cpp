@@ -2,7 +2,7 @@
 
 void treeCtor (struct tree* myTree, int type, union value value) {
     myTree->log_file = fopen ("log.txt", "w+");
-    fprintf (myTree->log_file, "LOG-file started\n");
+    //fprintf (myTree->log_file, "LOG-file started\n");
     fprintf (myTree->log_file, "Tree Ctor started\n");
 
     myTree->size = 10;
@@ -78,7 +78,6 @@ void treeResize (struct tree* myTree) {
         myTree->free = (int*) realloc (myTree->free, myTree->size * sizeof(int));
 
         for (int i = (myTree->size / 2); i < (myTree->size - 1); i++) {
-            DBG
             myTree->free[i] = i + 1;
             myTree->data[i].value.number = POISON;
             myTree->data[i].lefty = 0;
@@ -255,16 +254,16 @@ DBG
 DBG
     for (int i = 1; i < myTree->size; i++) {
         if (myTree->data[i].type_of_value == NUMBER) {
-            fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#d1234f\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> num}\", shape=record, style = filled, fillcolor = \"#d1234f\"];\n",
                     i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
         } else if (myTree->data[i].type_of_value == OPERATION) {
-            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6>op}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
                     i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
         } else if (myTree->data[i].type_of_value == VARIABLE) {
-            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> var}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
                     i, myTree->data[i].value.variable, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
         } else if (myTree->data[i].type_of_value == FREE) {
-            fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d}\", shape=record, style = filled, fillcolor = \"#ffffaf\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> free}\", shape=record, style = filled, fillcolor = \"#ffffaf\"];\n",
                     i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
 
         }

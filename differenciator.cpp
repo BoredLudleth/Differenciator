@@ -134,3 +134,217 @@ void print_node (struct node elem, FILE* Equation) {
         return;
     }
 }
+
+void diffNode (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent) {
+    graph_dump (myDiffTree);
+    switch (n->type_of_value) {
+        case NUMBER:
+        {
+            union value ZeroValue;
+            ZeroValue.number = 0;
+
+            treeAdd (myDiffTree, parent, ZeroValue, NUMBER);
+            return;
+            break;
+        }
+
+        case VARIABLE:
+        {
+            union value OneValue;
+            OneValue.number = 1;
+            
+            treeAdd (myDiffTree, parent, OneValue, NUMBER);                //return dVAR
+            return;
+            break;
+        }
+        case OPERATION:
+        {
+            int left_parent = 0;
+            int right_parent = 0;
+            int left_left_parent = 0;
+            int right_left_parent = 0;
+
+            union value SubValue;
+            union value PlusValue;
+            union value MulValue;
+
+            if (n->value.operation == '+') {
+                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+                return;
+            } else if (n->value.operation == '-') {
+                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+                return;
+            } else if (n->value.operation == '*') {
+                PlusValue.operation = '+';
+
+                parent =  treeAdd (myDiffTree, parent, PlusValue, OPERATION);
+                left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
+
+                right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
+                return;
+            } else if (n->value.operation == '/') {
+                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                
+                SubValue.operation = '-';
+
+                left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
+
+                MulValue.operation = '*';
+
+                left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
+
+
+                right_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
+
+                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+
+                return;
+                break;
+            }
+            printf ("ERROR:Unknown operation!\n");
+            return;                     //return one of branching
+            break;  
+        }
+        case FREE:
+        {
+            return;
+            break;
+        }
+        default:
+        {
+            printf ("ERROR:Unknown type of node!\n");
+            break;
+        }
+    }
+}
+
+void treeCopy (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent) {
+    parent = treeAdd (myDiffTree, parent, n->value, n->type_of_value);
+
+    if (n->lefty != 0) {
+        treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+    }
+
+    if (n->righty != 0) {
+        treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+    }
+
+    return;
+}
+
+void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
+    switch (n->type_of_value) {
+        case NUMBER:
+        {
+            union value ZeroValue;
+            ZeroValue.number = 0;
+
+            treeCtor (myDiffTree, NUMBER, ZeroValue);
+            return;
+            break;
+        }
+        
+        case VARIABLE:
+        {
+            union value OneValue;
+            OneValue.number = 1;
+
+            treeCtor (myDiffTree, NUMBER, OneValue);                //return dVAR
+            return;
+            break;
+        }
+
+        case OPERATION:
+        {
+            int parent = 0;
+            int left_parent = 0;
+            int right_parent = 0;
+            int left_left_parent = 0;
+            int right_left_parent = 0;
+
+            union value MulValue;
+            union value PlusValue;
+            union value SubValue;
+
+            if (n->value.operation == '+') {
+                treeCtor (myDiffTree, OPERATION, n->value);
+                parent = HEAD;
+
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+
+                return;
+            } else if (n->value.operation == '-') {
+                treeCtor (myDiffTree, OPERATION, n->value);
+                parent = HEAD;
+
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+
+                return;
+            } else if (n->value.operation == '*') {
+                PlusValue.operation = '+';
+
+                treeCtor (myDiffTree, OPERATION, PlusValue);
+                parent = HEAD;
+
+                left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
+
+                right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
+
+                return;
+            } else if (n->value.operation == '/') {
+                treeCtor (myDiffTree, OPERATION, n->value);
+                parent = HEAD;
+                
+                SubValue.operation = '-';
+
+                left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
+
+                MulValue.operation = '*';
+
+                left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
+
+
+                right_left_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_left_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
+
+                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+
+                return;
+            }
+            printf ("ERROR:Unknown operation!\n");
+            return;
+            break;                     //return one of branching
+        }
+        default:
+        {
+            printf ("ERROR:Unknown type of node!\n");
+            return;
+            break;
+        }
+    }
+}
