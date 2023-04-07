@@ -5,6 +5,16 @@
 
 #define HEAD 1
 
+#define LEFTY 0
+#define RIGHTY 1
+
+enum operations {
+    ADD = '+',
+    SUB = '-',
+    DIV = '/',
+    MUL = '*'
+};
+
 void readTree (struct tree* myTree);
 
 void fillingTree (struct tree* myTree, int parent);
@@ -19,10 +29,14 @@ void tree_eval (struct tree* myTree, FILE* Equation, int myTreeHead = HEAD);
 
 void print_node (struct node elem, FILE* Equation);
 
-void diffNode (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent = HEAD);
+void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent = HEAD);
 
 void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n);
 
-void treeCopy (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent);
+void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent);
+
+void treeCut (struct tree* myDiffTree, int parent);
+
+type treeDel (struct tree* myDiffTree, int parent, int child);
 
 #endif

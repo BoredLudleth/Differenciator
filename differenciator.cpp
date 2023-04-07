@@ -135,8 +135,8 @@ void print_node (struct node elem, FILE* Equation) {
     }
 }
 
-void diffNode (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent) {
-    graph_dump (myDiffTree);
+void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
+    //graph_dump (myDiffTree);
     switch (n->type_of_value) {
         case NUMBER:
         {
@@ -232,7 +232,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, const struct node* 
     }
 }
 
-void treeCopy (struct tree* myDiffTree, struct tree* myTree, const struct node* n, int parent) {
+void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
     parent = treeAdd (myDiffTree, parent, n->value, n->type_of_value);
 
     if (n->lefty != 0) {
@@ -346,5 +346,107 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             return;
             break;
         }
+    }
+}
+
+
+void treeCut (struct tree* myDiffTree, int parent) {
+    float a = POISON;
+    float b = POISON;
+    union value newValue;
+
+    if (myDiffTree->data[parent].type_of_value == OPERATION) {
+        if ((myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER) && (myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER)) {
+            a = treeDel (myDiffTree, parent, LEFTY);
+            b = treeDel (myDiffTree, parent, RIGHTY);
+
+            myDiffTree->data[parent].type_of_value = NUMBER;
+
+            switch (myDiffTree->data[parent].value.operation) {
+                case ADD:
+                {
+                    newValue.number = a + b;
+                    myDiffTree->data[parent].value = newValue;
+                    break;
+                }
+
+                case SUB:
+                {
+                    newValue.number = a - b;
+                    myDiffTree->data[parent].value = newValue;
+                    break;
+                }
+                
+                case MUL:
+                {
+                    newValue.number = a * b;
+                    myDiffTree->data[parent].value = newValue;
+                    break;
+                }
+
+                case DIV:
+                {
+                    //what if b ~ 0?
+                    newValue.number = a / b;
+                    myDiffTree->data[parent].value = newValue;
+                    break;
+                }
+
+                default:
+                {
+                    printf ("UNKNOWN OPERATION IN TREE_CUT\n");
+                    break;
+                }
+            }
+                     //return? restart? or check size
+        }
+        
+        if (myDiffTree->data[parent].lefty != 0) {
+            treeCut (myDiffTree, myDiffTree->data[parent].lefty);
+        }
+
+        if (myDiffTree->data[parent].righty != 0) {
+            treeCut (myDiffTree, myDiffTree->data[parent].righty);
+        }
+    }
+
+
+    return;
+}
+
+type treeDel (struct tree* myDiffTree, int parent, int child) {
+    float result = POISON;
+    if (child == LEFTY) {
+        myDiffTree->data[myDiffTree->data[parent].lefty].lefty = 0;
+        myDiffTree->data[myDiffTree->data[parent].lefty].righty = 0;
+        myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value = FREE;
+
+        result = myDiffTree->data[myDiffTree->data[parent].lefty].value.number;
+
+        myDiffTree->data[myDiffTree->data[parent].lefty].value.number = POISON;
+        myDiffTree->free[myDiffTree->data[parent].lefty] = myDiffTree->free_node;
+        myDiffTree->free_node = myDiffTree->data[parent].lefty;
+
+        myDiffTree->data[parent].lefty = 0;
+
+        return result;
+    } else if (child == RIGHTY) {
+        myDiffTree->data[myDiffTree->data[parent].righty].lefty = 0;
+        myDiffTree->data[myDiffTree->data[parent].righty].righty = 0;
+        myDiffTree->data[myDiffTree->data[parent].righty].type_of_value = FREE;
+
+        result = myDiffTree->data[myDiffTree->data[parent].righty].value.number;
+
+        myDiffTree->data[myDiffTree->data[parent].righty].value.number = POISON;
+        myDiffTree->free[myDiffTree->data[parent].righty] = myDiffTree->free_node;
+        myDiffTree->free_node = myDiffTree->data[parent].lefty;
+
+        myDiffTree->data[parent].righty = 0;
+
+        return result;
+    } else {
+        printf ("ERROR: OMG... No so much children in node!");
+
+        return -1;
     }
 }
