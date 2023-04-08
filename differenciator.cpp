@@ -12,34 +12,27 @@ int lenFile(FILE *text) {
 
 void readTree (struct tree* myTree) {
     FILE* input = fopen ("tree_reader.txt", "r+");
-DBG
+
     myTree->length = lenFile (input);
-DBG
     myTree->allText = (char*) calloc (myTree->length, sizeof(char));
-DBG
     fread(myTree->allText, sizeof(char), (size_t) (myTree->length), input);
-DBG
     myTree->allText += 1;
+
     int typeOfNode = selectType (myTree);
     union value value;
-DBG
+
     if (typeOfNode == NUMBER) {
         sscanf (myTree->allText, TYPE_DESIG, &value.number);
     } else if (typeOfNode == OPERATION) {
         sscanf (myTree->allText, "%c", &value.operation);           //if parent is number or operation it shouldn't have children
     } else if (typeOfNode == VARIABLE) {
         sscanf (myTree->allText, "%c", &value.variable);
-    }                                                               //what if it's another thing -> error
+    }
 
     findScope (myTree);
-DBG
     treeCtor (myTree, typeOfNode, value);
-DBG
+
     fillingTree (myTree, 1);
-    // '(' создаю узел
-    // сразу же записываю его внутренность - следующий символ
-    // если внутренность число - усё, не добавляю дальше
-    // создаю узел первого сына если есть (
     fclose (input);
     
 
@@ -82,11 +75,11 @@ void fillingTree (struct tree* myTree, int parent) {
 
 int selectType (struct tree* myTree) {
     if (myTree->allText[myTree->currentSym] <= '9' && myTree->allText[myTree->currentSym] >= '0') {
-        return 0;
+        return NUMBER;
     } else if (myTree->allText[myTree->currentSym] >= 'a' && myTree->allText[myTree->currentSym] <= 'z') {
-        return 2;           // variable 
+        return VARIABLE;           // variable 
     }
-    return 1;               // operation
+    return OPERATION;               // operation
 }
 
 void findScope (struct tree* myTree) {
@@ -136,7 +129,6 @@ void print_node (struct node elem, FILE* Equation) {
 }
 
 void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
-    //graph_dump (myDiffTree);
     switch (n->type_of_value) {
         case NUMBER:
         {
@@ -353,7 +345,6 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
 void treeCut (struct tree* myDiffTree, int parent) {
     float a = POISON;
     float b = POISON;
-    union value newValue;
 
     if (myDiffTree->data[parent].type_of_value == OPERATION) {
         if ((myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER) && (myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER)) {
@@ -365,30 +356,29 @@ void treeCut (struct tree* myDiffTree, int parent) {
             switch (myDiffTree->data[parent].value.operation) {
                 case ADD:
                 {
-                    newValue.number = a + b;
-                    myDiffTree->data[parent].value = newValue;
+                    myDiffTree->data[parent].value.number = a + b;
                     break;
                 }
 
                 case SUB:
                 {
-                    newValue.number = a - b;
-                    myDiffTree->data[parent].value = newValue;
+                    myDiffTree->data[parent].value.number = a - b;
                     break;
                 }
                 
                 case MUL:
                 {
-                    newValue.number = a * b;
-                    myDiffTree->data[parent].value = newValue;
+                    myDiffTree->data[parent].value.number = a * b;
                     break;
                 }
 
                 case DIV:
                 {
-                    //what if b ~ 0?
-                    newValue.number = a / b;
-                    myDiffTree->data[parent].value = newValue;
+                    if (cmpFloats(b, 0)){
+                        printf ("ERROR: Division on zero\n");
+                        return;
+                    }
+                    myDiffTree->data[parent].value.number = a / b;
                     break;
                 }
 
@@ -398,9 +388,63 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     break;
                 }
             }
-                     //return? restart? or check size
+            
         }
-        
+//can make -> switch
+        if (myDiffTree->data[parent].value.operation == '*') {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) { // not correct eq
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 0;
+                }
+
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    type copy = treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
+            } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 0;
+                } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
+                    type copy = treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
+            }
+        }
+
+        if (myDiffTree->data[parent].value.operation == '+') {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    type copy = treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
+            } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                type copy = treeDel (myDiffTree, parent, LEFTY);
+                treeDel (myDiffTree, parent, RIGHTY);
+
+                myDiffTree->data[parent].type_of_value = VARIABLE;
+                myDiffTree->data[parent].value.number = copy;
+            }
+        }
+
+        // add division on 1
+
         if (myDiffTree->data[parent].lefty != 0) {
             treeCut (myDiffTree, myDiffTree->data[parent].lefty);
         }
@@ -449,4 +493,12 @@ type treeDel (struct tree* myDiffTree, int parent, int child) {
 
         return -1;
     }
+}
+
+int cmpFloats (float a, float b) {
+    if (abs(a - b) < EPSILON) {
+        return true;
+    }
+
+    return false;
 }

@@ -2,11 +2,14 @@
 #define DIFFERENCIATOR_HPP
 
 #include "bintree.hpp"
+#include <math.h>
 
 #define HEAD 1
 
 #define LEFTY 0
 #define RIGHTY 1
+
+#define EPSILON 1e-5
 
 enum operations {
     ADD = '+',
@@ -38,5 +41,7 @@ void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 void treeCut (struct tree* myDiffTree, int parent);
 
 type treeDel (struct tree* myDiffTree, int parent, int child);
+
+int cmpFloats (float a, float b);
 
 #endif

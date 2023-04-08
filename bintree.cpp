@@ -2,14 +2,12 @@
 
 void treeCtor (struct tree* myTree, int type, union value value) {
     myTree->log_file = fopen ("log.txt", "w+");
-    //fprintf (myTree->log_file, "LOG-file started\n");
     fprintf (myTree->log_file, "Tree Ctor started\n");
 
     myTree->size = 10;
 
     myTree->data = (node*) calloc (myTree->size, sizeof (node));
     myTree->free = (int*) calloc (myTree->size, sizeof (int));
-    // myTree->varLabels = (char**) calloc (myTree->numberOfLabels, sizeof (char*));
 
     myTree->free[0] = -1;
     myTree->free[1] = -1;
@@ -39,8 +37,6 @@ void treeCtor (struct tree* myTree, int type, union value value) {
     fprintf (myTree->log_file, "Tree Ctor complete\n");
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 void treeDtor (struct tree* myTree) {
     for (int i = 0; i < myTree->size; i++) {
         myTree->data[i].value.number = POISON;
@@ -51,10 +47,10 @@ void treeDtor (struct tree* myTree) {
     for (int i = 0; i < myTree->size; i++) {
         myTree->free[i] = POISON;
     }
-DBG
+
     free (myTree->free);
     myTree->free = nullptr;
-DBG
+
     free (myTree->data);
     myTree->data = nullptr;
 
@@ -67,12 +63,17 @@ DBG
     fprintf (myTree->log_file, "Tree destroyed\n");
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void treeResize (struct tree* myTree) {
-        fprintf (myTree->log_file, "Tree resizing..\n");                  //what if resizing couldn't be complete...
+        fprintf (myTree->log_file, "Tree resizing..\n");
         myTree->free_node = myTree->size;
         myTree->size *= 2;
-        myTree->data = (node*) realloc (myTree->data, myTree->size * sizeof(node)); // check can make break
+        myTree->data = (node*) realloc (myTree->data, myTree->size * sizeof(node));
+
+        if (myTree->data == NULL) {
+            printf ("ERROR: Resizing incomplete\n");
+            return;
+        }
+
         myTree->head = myTree->data;
 
         myTree->free = (int*) realloc (myTree->free, myTree->size * sizeof(int));
@@ -192,8 +193,6 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     return -1;
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 char* inttoa(int n, char* s) {
     int i = 0;
     int sign = 0;
@@ -235,15 +234,16 @@ void graph_dump (struct tree* myTree) {
     char pic_name[20] = "image";
     strcat (pic_name, im_num);
     strcat (pic_name, ".png\0");
-DBG
+
     num++;
 
     FILE* output = fopen (name_of_file,"w+");
+
     myTree->output = output;
     if  (myTree->output == nullptr) {
         printf ("File didn't open\n");
     }
-DBG
+
     fprintf (myTree->output, "digraph TB\n{\n");
     fprintf (myTree->output, "node [shape=record fontname=Arial];\n");
     fprintf (myTree->output, "edge [dir=both, style=\"\", constraint=false, color = darkred]");
@@ -251,7 +251,7 @@ DBG
     fprintf (myTree->output, "splines = \"ortho\"\n");
     
     fprintf (myTree->output, "head [label = \"HEAD\", style = filled, fillcolor = \"#d01234\"];\n");
-DBG
+
     for (int i = 1; i < myTree->size; i++) {
         if (myTree->data[i].type_of_value == NUMBER) {
             fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> num}\", shape=record, style = filled, fillcolor = \"#d1234f\"];\n",
@@ -282,13 +282,17 @@ DBG
     fprintf (myTree->output, "}\n");
     fclose (myTree->output);
     myTree->output = nullptr;
-DBG
+
+    compileDot (name_of_file, pic_name);
+}
+
+void compileDot (char* name_of_file, char* pic_name) {
     char command[50] = "dot ";
+
     strcat (command, name_of_file);
     strcat (command, " -Tpng -o ");
     strcat (command,"img/");
     strcat (command, pic_name);
-DBG
+
     system(command);
-DBG
 }

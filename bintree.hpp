@@ -47,21 +47,19 @@ struct tree
 
 
     struct node* head = nullptr;
-    struct node* data;    
+    struct node* data = nullptr;    
     
-    int* free;
+    int* free = nullptr;
     int free_node = 0;
 
-    FILE* output;
+    FILE* output = nullptr;
     char* allText = nullptr;
     int length = 0;
     int currentSym = 0;
 
-    FILE* log_file;                 //upgrate log-file
+    FILE* log_file = nullptr;                 //upgrate log-file
 
-    // char** varLabels = nullptr;
-    // int numberOfLabels = MAX_DIF_LABELS;
-    // int currentNumLabels = 0;
+    //add depth for cutting max cycle?
 };
 
 
@@ -78,5 +76,7 @@ char* inttoa(int n, char* s);
 void reverse(char* s);
 
 void graph_dump (struct tree* myTree);
+
+void compileDot (char* name_of_file, char* pic_name);
 
 #endif
