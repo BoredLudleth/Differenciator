@@ -72,7 +72,7 @@ struct tree
     int length = 0;
     int currentSym = 0;
 
-    FILE* log_file = nullptr;                 //upgrate log-file
+    FILE* log_file = nullptr;
 
     //add depth for cutting max cycle?
 };

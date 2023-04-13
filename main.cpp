@@ -39,6 +39,13 @@ int main ()
     return 0;
 }
 // TODO what if operation doesn't exist
+// TODO add sin, cos and other
+// TODO integrate checks
+// TODO return dx, not 1
+// TODO fix log-file
+// TODO upgrate log-file
+// TODO resize make little
+// TODO how many times cut tree?
 
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

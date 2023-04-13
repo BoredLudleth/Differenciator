@@ -15,7 +15,8 @@ enum operations {
     ADD = '+',
     SUB = '-',
     DIV = '/',
-    MUL = '*'
+    MUL = '*',
+    //POW = '^'
 };
 
 void readTree (struct tree* myTree);

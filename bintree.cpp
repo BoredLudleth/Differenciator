@@ -58,7 +58,7 @@ void treeDtor (struct tree* myTree) {
     myTree->data = nullptr;
 
 
-    myTree->error = 0;      //make enum for errors
+    myTree->error = 0;
     myTree->free_node = 0;
     myTree->head = nullptr;
     myTree->size = 0;
