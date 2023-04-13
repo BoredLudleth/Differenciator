@@ -1,9 +1,319 @@
 Tree Ctor started
 Tree Ctor complete
 Adding new element to the tree
-Added number in left: 0.000000
+Added operation  + in left
 Adding new element to the tree
-Added number in right: v
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+e
+Added number in left: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Tree resizing..
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Tree resizing..
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Tree resizing..
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Tree resizing..
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 0.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Tree resizing..
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 0.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Tree resizing..
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 0.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  * in left
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
+Adding new element to the tree
+Added operation  * in right
+Adding new element to the tree
+Tree resizing..
+Added operation  + in left
+Adding new element to the tree
+Added number in left: 1.000000
+Adding new element to the tree
+Added number in right: 0.000000
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Graph dump!
+Graph dump!
+Tree destroyed
+Tree Ctor started
+Tree Ctor complete
+Adding new element to the tree
+Added operation  + in left
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: x
+Adding new element to the tree
+Added operation  + in right
+Adding new element to the tree
+Added number in left: x
+Adding new element to the tree
+Added number in right: 1.000000
 Graph dump!
 Graph dump!
 Tree destroyed

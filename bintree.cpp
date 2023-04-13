@@ -1,7 +1,10 @@
 #include "bintree.hpp"
 
 void treeCtor (struct tree* myTree, int type, union value value) {
-    myTree->log_file = fopen ("log.txt", "w+");
+    if (myTree->log_file == nullptr){
+        myTree->log_file = fopen ("log.txt", "a+");
+    }
+    
     fprintf (myTree->log_file, "Tree Ctor started\n");
 
     myTree->size = 10;
@@ -99,7 +102,6 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     fprintf (myTree->log_file, "Adding new element to the tree\n");
 
     if (myTree->free[parent] != -1) {
-        DBG
         printf ("ERROR: Can't add parent is secret for us, value did't added\n");
         fprintf (myTree->log_file, "ERROR: Can't add parent is secret for us, value did't added\n");
 
@@ -121,13 +123,10 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     }
 
     if (myTree->free_node == 0) {
-        DBG
-
         treeResize(myTree);
     }
 
     if (parent > myTree->size) {
-        DBG
         printf ("ERROR: Parent > tree size, value did't added\n");
 
         return -1;
@@ -183,7 +182,6 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
 
             return current;
         } else {
-            DBG
             printf ("ERROR: Parent has two children, value did't added\n");
             fprintf (myTree->log_file, "ERROR: Parent has two children, value did't added\n");
 

@@ -40,7 +40,6 @@ void readTree (struct tree* myTree) {
 
 
 void fillingTree (struct tree* myTree, int parent) {
-    DBG
     if (myTree->allText[0] == '(') {
         myTree->allText += 1;
 
@@ -49,13 +48,10 @@ void fillingTree (struct tree* myTree, int parent) {
 
         if (type == NUMBER) {
             sscanf (myTree->allText, TYPE_DESIG, &value.number);
-            printf ("eaten number is %f\n", value.number);
         } else if (type == OPERATION) {
             sscanf (myTree->allText, "%c", &value.operation);
-            printf ("eaten op is %c\n", value.operation);
         } else if (type == VARIABLE) {
-            sscanf (myTree->allText, "%c", &value.variable);
-            printf ("eaten op is %c\n", value.variable);            
+            sscanf (myTree->allText, "%c", &value.variable);         
         } 
 
         findScope (myTree);
@@ -255,7 +251,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             union value OneValue;
             OneValue.number = 1;
 
-            treeCtor (myDiffTree, NUMBER, OneValue);                //return dVAR
+            treeCtor (myDiffTree, NUMBER, OneValue);                //return dVAR vars independent
             return;
             break;
         }
@@ -276,7 +272,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 treeCtor (myDiffTree, OPERATION, n->value);
                 parent = HEAD;
 
-                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);       //dl
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
 
                 return;
@@ -403,7 +399,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
 
                 if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
                     treeDel (myDiffTree, parent, LEFTY);
-                    type copy = treeDel (myDiffTree, parent, RIGHTY);
+                    _t copy = treeDel (myDiffTree, parent, RIGHTY);
 
                     myDiffTree->data[parent].type_of_value = VARIABLE;
                     myDiffTree->data[parent].value.number = copy;
@@ -416,7 +412,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     myDiffTree->data[parent].type_of_value = NUMBER;
                     myDiffTree->data[parent].value.number = 0;
                 } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
-                    type copy = treeDel (myDiffTree, parent, LEFTY);
+                    _t copy = treeDel (myDiffTree, parent, LEFTY);
                     treeDel (myDiffTree, parent, RIGHTY);
 
                     myDiffTree->data[parent].type_of_value = VARIABLE;
@@ -429,21 +425,45 @@ void treeCut (struct tree* myDiffTree, int parent) {
             if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
                 if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
                     treeDel (myDiffTree, parent, LEFTY);
-                    type copy = treeDel (myDiffTree, parent, RIGHTY);
+                    _t copy = treeDel (myDiffTree, parent, RIGHTY);
 
                     myDiffTree->data[parent].type_of_value = VARIABLE;
                     myDiffTree->data[parent].value.number = copy;
                 }
             } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
-                type copy = treeDel (myDiffTree, parent, LEFTY);
-                treeDel (myDiffTree, parent, RIGHTY);
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    _t copy = treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
 
-                myDiffTree->data[parent].type_of_value = VARIABLE;
-                myDiffTree->data[parent].value.number = copy;
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
             }
         }
 
-        // add division on 1
+        if (myDiffTree->data[parent].value.operation == '/') {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
+                    treeDel (myDiffTree, parent, RIGHTY);
+                    _t copy = treeDel (myDiffTree, parent, LEFTY);
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
+            }
+        }
+
+        if (myDiffTree->data[parent].value.operation == '-') {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, RIGHTY);
+                    _t copy = treeDel (myDiffTree, parent, LEFTY);
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value.number = copy;
+                }
+            }
+        }
 
         if (myDiffTree->data[parent].lefty != 0) {
             treeCut (myDiffTree, myDiffTree->data[parent].lefty);
@@ -458,7 +478,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
     return;
 }
 
-type treeDel (struct tree* myDiffTree, int parent, int child) {
+_t treeDel (struct tree* myDiffTree, int parent, int child) {
     float result = POISON;
     if (child == LEFTY) {
         myDiffTree->data[myDiffTree->data[parent].lefty].lefty = 0;
@@ -497,8 +517,8 @@ type treeDel (struct tree* myDiffTree, int parent, int child) {
 
 int cmpFloats (float a, float b) {
     if (abs(a - b) < EPSILON) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }

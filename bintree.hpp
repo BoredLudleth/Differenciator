@@ -10,7 +10,7 @@
 
 #define POISON 0xBAD
 
-typedef float type;
+typedef float _t;         
 #define TYPE_DESIG "%f"
 #define TYPE_DESIG_FOR_PRINT "%5f"
 #define MAX_FILE_NAME 40
