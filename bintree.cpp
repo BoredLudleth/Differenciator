@@ -21,7 +21,7 @@ void treeCtor (struct tree* myTree, int type, union value value) {
     } else  if (type == NUMBER){
         myTree->data[myTree->free_node].value.number = value.number;
     } else if (type == VARIABLE) {
-        myTree->data[myTree->free_node].value.variable = value.variable;
+        myTree->data[myTree->free_node].value = value;
     }
 
     myTree->data[1].type_of_value  = type;
@@ -152,9 +152,9 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
                 printf ("Added in left: %f\n", value.number);
                 fprintf (myTree->log_file, "Added number in left: %f\n", value.number);
             } else if (type == VARIABLE) {
-                myTree->data[myTree->free_node].value.variable = value.variable;
-                printf ("Added in left: %c\n", value.variable);
-                fprintf (myTree->log_file, "Added number in left: %c\n", value.variable);
+                myTree->data[myTree->free_node].value = value;
+                printf ("Added in left: %s\n", value.variable);
+                fprintf (myTree->log_file, "Added number in left: %s\n", value.variable);
             }
 
             myTree->data[myTree->free_node].type_of_value  = type;
@@ -175,9 +175,9 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
                 printf ("Added in right: %f\n", value.number);
                 fprintf (myTree->log_file, "Added number in right: %f\n", value.number);
             } else if (type == VARIABLE) {
-                myTree->data[myTree->free_node].value.variable = value.variable;
-                printf ("Added in right: %c\n", value.variable);
-                fprintf (myTree->log_file, "Added number in right: %c\n", value.variable);
+                myTree->data[myTree->free_node].value = value;
+                printf ("Added in right: %s\n", value.variable);
+                fprintf (myTree->log_file, "Added number in right: %s\n", value.variable);
             }
 
             myTree->data[myTree->free_node].type_of_value  = type;
@@ -266,7 +266,7 @@ void graph_dump (struct tree* myTree) {
             fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6>op}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
                     i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);   
         } else if (myTree->data[i].type_of_value == VARIABLE) {
-            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> var}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %s|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> var}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
                     i, myTree->data[i].value.variable, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);    
         } else if (myTree->data[i].type_of_value == FREE) {
             fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> free}\", shape=record, style = filled, fillcolor = \"#ffffaf\"];\n",

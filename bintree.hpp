@@ -20,7 +20,7 @@ typedef float _t;
 union value{
     float number;
     char operation;
-    char variable;
+    char variable[4];
 };
 
 enum TypeOfValue {

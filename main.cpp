@@ -8,7 +8,7 @@ int main ()
 
     readTree (myTree);
     graph_dump (myTree);
-    // treeCut (myTree, HEAD);
+    treeCut (myTree, HEAD);
     graph_dump (myTree);
 
     // [#1]CUTTING ORIGIN TREE

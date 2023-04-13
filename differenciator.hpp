@@ -41,7 +41,7 @@ void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
 void treeCut (struct tree* myDiffTree, int parent);
 
-_t treeDel (struct tree* myDiffTree, int parent, int child);
+union value treeDel (struct tree* myDiffTree, int parent, int child);
 
 int cmpFloats (float a, float b);
 
