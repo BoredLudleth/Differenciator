@@ -30,6 +30,21 @@ enum TypeOfValue {
     VARIABLE  = 2
 };
 
+enum Errors {
+    NO_ERRORS                    = 0,
+    ERROR_RESIZE                 = 1,                   //void treeResize (struct tree* myTree) 
+    ERROR_UNDEFENITE_PARENT      = 2,                   //int treeAdd (struct tree* myTree, int parent, union value value, int type) 
+    ERROR_PARENT_IS_NUMBER       = 3,
+    ERROR_PARENT_IS_VARIABLE     = 4,
+    ERROR_PARENT_OUT_OF_RANGE    = 5,
+    ERROR_ALREADY_TWO_CHILDREN   = 6,
+    ERROR_GRAPHVIZ_FILE_NOT_OPEN = 7,                   //void graph_dump (struct tree* myTree) 
+    ERROR_UNKNOWN_OPERATION      = 8,                   //void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent)
+    ERROR_UNKNOWN_TYPE           = 9,
+    ERROR_DIVISION_ON_ZERO       = 10,
+    ERROR_DELETE_UNKNOWN_CHILD   = 11
+};
+
 struct node
 {
     int type_of_value = FREE;

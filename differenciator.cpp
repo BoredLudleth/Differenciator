@@ -24,7 +24,7 @@ void readTree (struct tree* myTree) {
     if (typeOfNode == NUMBER) {
         sscanf (myTree->allText, TYPE_DESIG, &value.number);
     } else if (typeOfNode == OPERATION) {
-        sscanf (myTree->allText, "%c", &value.operation);           //if parent is number or operation it shouldn't have children
+        sscanf (myTree->allText, "%c", &value.operation);           
     } else if (typeOfNode == VARIABLE) {
         sscanf (myTree->allText, "%c", &value.variable);
     }
@@ -73,9 +73,9 @@ int selectType (struct tree* myTree) {
     if (myTree->allText[myTree->currentSym] <= '9' && myTree->allText[myTree->currentSym] >= '0') {
         return NUMBER;
     } else if (myTree->allText[myTree->currentSym] >= 'a' && myTree->allText[myTree->currentSym] <= 'z') {
-        return VARIABLE;           // variable 
+        return VARIABLE;           
     }
-    return OPERATION;               // operation
+    return OPERATION;               
 }
 
 void findScope (struct tree* myTree) {
@@ -203,6 +203,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
                 return;
                 break;
             }
+            myTree->error = ERROR_UNKNOWN_OPERATION;
             printf ("ERROR:Unknown operation!\n");
             return;                     //return one of branching
             break;  
@@ -214,6 +215,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
         }
         default:
         {
+            myTree->error = ERROR_UNKNOWN_TYPE;
             printf ("ERROR:Unknown type of node!\n");
             break;
         }
@@ -324,12 +326,14 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
 
                 return;
             }
+            myTree->error = ERROR_UNKNOWN_OPERATION;
             printf ("ERROR:Unknown operation!\n");
             return;
             break;                     //return one of branching
         }
         default:
         {
+            myTree->error = ERROR_UNKNOWN_TYPE;
             printf ("ERROR:Unknown type of node!\n");
             return;
             break;
@@ -371,6 +375,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
                 case DIV:
                 {
                     if (cmpFloats(b, 0)){
+                        myDiffTree->error = ERROR_DIVISION_ON_ZERO;
                         printf ("ERROR: Division on zero\n");
                         return;
                     }
@@ -380,6 +385,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
 
                 default:
                 {
+                    myDiffTree->error = ERROR_UNKNOWN_OPERATION;
                     printf ("UNKNOWN OPERATION IN TREE_CUT\n");
                     break;
                 }
@@ -509,6 +515,7 @@ _t treeDel (struct tree* myDiffTree, int parent, int child) {
 
         return result;
     } else {
+        myDiffTree->error = ERROR_DELETE_UNKNOWN_CHILD;
         printf ("ERROR: OMG... No so much children in node!");
 
         return -1;

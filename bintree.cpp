@@ -73,6 +73,7 @@ void treeResize (struct tree* myTree) {
         myTree->data = (node*) realloc (myTree->data, myTree->size * sizeof(node));
 
         if (myTree->data == NULL) {
+            myTree->error = ERROR_RESIZE;
             printf ("ERROR: Resizing incomplete\n");
             return;
         }
@@ -102,6 +103,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     fprintf (myTree->log_file, "Adding new element to the tree\n");
 
     if (myTree->free[parent] != -1) {
+        myTree->error = ERROR_UNDEFENITE_PARENT;
         printf ("ERROR: Can't add parent is secret for us, value did't added\n");
         fprintf (myTree->log_file, "ERROR: Can't add parent is secret for us, value did't added\n");
 
@@ -109,6 +111,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     }
 
     if (myTree->data[parent].type_of_value == NUMBER) {
+        myTree->error = ERROR_PARENT_IS_NUMBER;
         printf ("We didn't add your value in tree, because the parent is number!\n");
         fprintf (myTree->log_file, "We didn't add your value in tree, because the parent is number!\n");
 
@@ -116,6 +119,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     }
 
     if (myTree->data[parent].type_of_value == VARIABLE) {
+        myTree->error = ERROR_PARENT_IS_VARIABLE;
         printf ("We didn't add your value in tree, because the parent is variable!\n");
         fprintf (myTree->log_file, "We didn't add your value in tree, because the parent is variable!\n");
 
@@ -127,6 +131,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     }
 
     if (parent > myTree->size) {
+        myTree->error = ERROR_PARENT_OUT_OF_RANGE;
         printf ("ERROR: Parent > tree size, value did't added\n");
 
         return -1;
@@ -182,6 +187,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
 
             return current;
         } else {
+            myTree->error = ERROR_ALREADY_TWO_CHILDREN;
             printf ("ERROR: Parent has two children, value did't added\n");
             fprintf (myTree->log_file, "ERROR: Parent has two children, value did't added\n");
 
@@ -239,7 +245,9 @@ void graph_dump (struct tree* myTree) {
 
     myTree->output = output;
     if  (myTree->output == nullptr) {
+        myTree->error = ERROR_GRAPHVIZ_FILE_NOT_OPEN;
         printf ("File didn't open\n");
+        return;
     }
 
     fprintf (myTree->output, "digraph TB\n{\n");
@@ -253,16 +261,16 @@ void graph_dump (struct tree* myTree) {
     for (int i = 1; i < myTree->size; i++) {
         if (myTree->data[i].type_of_value == NUMBER) {
             fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> num}\", shape=record, style = filled, fillcolor = \"#d1234f\"];\n",
-                    i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
+                    i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     
         } else if (myTree->data[i].type_of_value == OPERATION) {
             fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6>op}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
-                    i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
+                    i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);   
         } else if (myTree->data[i].type_of_value == VARIABLE) {
             fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> var}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
-                    i, myTree->data[i].value.variable, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
+                    i, myTree->data[i].value.variable, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);    
         } else if (myTree->data[i].type_of_value == FREE) {
             fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> free}\", shape=record, style = filled, fillcolor = \"#ffffaf\"];\n",
-                    i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     //integer add  
+                    i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);  
 
         }
     }
@@ -293,4 +301,10 @@ void compileDot (char* name_of_file, char* pic_name) {
     strcat (command, pic_name);
 
     system(command);
+}
+
+void tree_check (struct tree* myTree) {
+    if (myTree->error != 0) {
+        exit(1);
+    }
 }
