@@ -8,7 +8,7 @@ int main ()
 
     readTree (myTree);
     graph_dump (myTree);
-    treeCut (myTree, HEAD);
+    treeReduction (myTree);
     graph_dump (myTree);
 
     // [#1]CUTTING ORIGIN TREE
@@ -27,9 +27,7 @@ int main ()
     diffTree (myDiffTree, myTree, &(myTree->data[1]));
     graph_dump (myDiffTree);
 
-    for (int i = 0; i < 10; i++) {
-        treeCut (myDiffTree, HEAD);
-    }
+    treeReduction (myDiffTree);
 
     graph_dump (myDiffTree);
 
@@ -40,12 +38,8 @@ int main ()
 }
 // TODO what if operation doesn't exist
 // TODO add sin, cos and other
-// TODO integrate checks
+// TODO integrate checks? recursion is a problem would be slower... and with exit...
 // TODO return dx, not 1
-// TODO fix log-file
-// TODO upgrate log-file
-// TODO resize make little
-// TODO how many times cut tree?
-
+// TODO resize make little -> в ситоре надо перехватить файл с помощью последней переменной
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

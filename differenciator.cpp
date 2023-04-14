@@ -4,7 +4,7 @@
 
 int lenFile(FILE *text) {
     fseek(text, 0, SEEK_END);
-    int length =  ftell(text);
+    int length = (int) ftell(text);
     fseek(text, 0, SEEK_SET);
     printf ("\nlengthOfFile = %d\n", length);
 
@@ -143,6 +143,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
     switch (n->type_of_value) {
         case NUMBER:
         {
+            myDiffTree->length += 1;
             union value ZeroValue;
             ZeroValue.number = 0;
 
@@ -153,6 +154,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
         case VARIABLE:
         {
+            myDiffTree->length += 1;
             union value OneValue;
             OneValue.number = 1;
             
@@ -172,11 +174,15 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
             union value MulValue;
 
             if (n->value.operation == '+') {
+                myDiffTree->length += 1;
+
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
                 DL
                 DR
                 return;
             } else if (n->value.operation == '-') {
+                myDiffTree->length += 1;
+
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
                 DL
                 DR
@@ -185,7 +191,13 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
                 PlusValue.operation = '+';
 
                 parent =  treeAdd (myDiffTree, parent, PlusValue, OPERATION);
+
+                myDiffTree->length += 1;
+
                 left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+
+                myDiffTree->length += 1;
+
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
 
@@ -195,23 +207,36 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
                 return;
             } else if (n->value.operation == '/') {
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+
+                myDiffTree->length += 1;
                 
                 SubValue.operation = '-';
 
                 left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
 
+                myDiffTree->length += 1;
+
                 MulValue.operation = '*';
 
                 left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
+
+                myDiffTree->length += 1;
+
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
 
 
                 right_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
+
+                myDiffTree->length += 1;
+
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
 
                 right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+
+                myDiffTree->length += 1;
+
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
 
@@ -240,6 +265,8 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
     parent = treeAdd (myDiffTree, parent, n->value, n->type_of_value);
 
+    myDiffTree->length += 1;
+
     if (n->lefty != 0) {
         treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
     }
@@ -259,6 +286,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             ZeroValue.number = 0;
 
             treeCtor (myDiffTree, NUMBER, ZeroValue);
+
             return;
             break;
         }
@@ -522,6 +550,12 @@ void treeCut (struct tree* myDiffTree, int parent) {
 
 
     return;
+}
+
+void treeReduction (struct tree* myDiffTree, int parent) {
+    for (int i = 0; i < myDiffTree->length; i++) {
+        treeCut (myDiffTree);
+    }
 }
 
 union value treeDel (struct tree* myDiffTree, int parent, int child) {

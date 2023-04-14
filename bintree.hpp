@@ -17,7 +17,7 @@ typedef float _t;
 
 #define MAX_NODES 10
 
-union value{
+union value {
     float number;
     char operation;
     char variable[4];
@@ -45,8 +45,7 @@ enum Errors {
     ERROR_DELETE_UNKNOWN_CHILD   = 11
 };
 
-struct node
-{
+struct node {
     int type_of_value = FREE;
     union value value;
 
@@ -55,8 +54,7 @@ struct node
     int righty = 0;
 };
 
-struct tree 
-{   
+struct tree {   
     int size = MAX_NODES;
     size_t error  = 0;
 
@@ -82,16 +80,18 @@ void treeCtor (struct tree* myTree, int type, union value value);
 
 void treeDtor (struct tree* myTree);
 
-void treeResize (struct tree* myTree);
+void treeResizeUp (struct tree* myTree);
 
 int treeAdd (struct tree* myTree, int parent, union value value, int type);
 
-char* inttoa(int n, char* s);
+char* inttoa (int n, char* s);
 
-void reverse(char* s);
+void reverse (char* s);
 
 void graph_dump (struct tree* myTree);
 
 void compileDot (char* name_of_file, char* pic_name);
+
+void tree_check (struct tree* myTree);
 
 #endif

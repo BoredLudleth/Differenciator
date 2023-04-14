@@ -1,11 +1,20 @@
 #include "bintree.hpp"
 
 void treeCtor (struct tree* myTree, int type, union value value) {
-    if (myTree->log_file == nullptr){
-        myTree->log_file = fopen ("log.txt", "a+");
-    }
+    static int count_tree = 0;
+
+    char log_name[15] = "log";
+    char number_of_log[5] = "";
+    strcat (log_name, inttoa(count_tree, number_of_log));
+    strcat (log_name, ".html");
+
+    myTree->log_file = fopen (log_name, "w+");
+
+    count_tree++;
+
+    fprintf (myTree->log_file, "<pre>\n");
     
-    fprintf (myTree->log_file, "Tree Ctor started\n");
+    fprintf (myTree->log_file, "<h2>Tree Ctor started</h2>\n");
 
     myTree->size = 10;
 
@@ -30,6 +39,8 @@ void treeCtor (struct tree* myTree, int type, union value value) {
         myTree->free[i] = i + 1;
         myTree->data[i].type_of_value = FREE;
     }
+    
+    myTree->length = 1;
 
     myTree->free_node = 2;
 
@@ -63,10 +74,11 @@ void treeDtor (struct tree* myTree) {
     myTree->head = nullptr;
     myTree->size = 0;
 
-    fprintf (myTree->log_file, "Tree destroyed\n");
+    fprintf (myTree->log_file, "<h2>Tree destroyed</h2>\n");
+    fprintf (myTree->log_file, "Тут могла быть ваша Полторашка\n");
 }
 
-void treeResize (struct tree* myTree) {
+void treeResizeUp (struct tree* myTree) {
         fprintf (myTree->log_file, "Tree resizing..\n");
         myTree->free_node = myTree->size;
         myTree->size *= 2;
@@ -127,7 +139,7 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     }
 
     if (myTree->free_node == 0) {
-        treeResize(myTree);
+        treeResizeUp(myTree);
     }
 
     if (parent > myTree->size) {
@@ -290,6 +302,8 @@ void graph_dump (struct tree* myTree) {
     myTree->output = nullptr;
 
     compileDot (name_of_file, pic_name);
+
+    fprintf (myTree->log_file, "<img src = img/%s width 40/>\n\n\n", pic_name);
 }
 
 void compileDot (char* name_of_file, char* pic_name) {
