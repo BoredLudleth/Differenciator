@@ -16,8 +16,11 @@ bintree.o: bintree.cpp
 differenciator.o: differenciator.cpp
 	g++ $(CFLAGS) differenciator.cpp -o differenciator.o
 
-run_bintree: main.o bintree.o differenciator.o
-	g++ main.o bintree.o differenciator.o -o main
+recurrsiveDown.o: recurrsiveDown.cpp
+	g++ $(CFLAGS) recurrsiveDown.cpp -o recurrsiveDown.o
+
+run_bintree: main.o bintree.o differenciator.o recurrsiveDown.o
+	g++ main.o bintree.o differenciator.o recurrsiveDown.o -o main
 
 run_programm:
 	./main

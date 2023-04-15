@@ -1,6 +1,8 @@
 #include "bintree.hpp"
 #include "differenciator.hpp"
 
+#include "recurrsiveDown.hpp"
+
 int main () 
 {
     struct tree Tree;
@@ -29,6 +31,8 @@ int main ()
 
     treeDtor (myTree);
     treeDtor (myDiffTree);
+
+    printf ("out:%d\n", getG ("1+5*(1*5+17)$"));
 
     return 0;
 }
