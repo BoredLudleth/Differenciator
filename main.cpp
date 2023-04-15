@@ -36,6 +36,6 @@ int main ()
 // TODO add sin, cos and other
 // TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO return dx, not 1
-// TODO resize make little -> в ситоре надо перехватить файл с помощью последней переменной
+// TODO ctor not make new log file to down realloced
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

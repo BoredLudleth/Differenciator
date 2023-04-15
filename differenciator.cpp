@@ -396,6 +396,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
             a = treeDel (myDiffTree, parent, LEFTY);
             b = treeDel (myDiffTree, parent, RIGHTY);
 
+            myDiffTree->length -= 2;
+
             myDiffTree->data[parent].type_of_value = NUMBER;
 
             switch (myDiffTree->data[parent].value.operation) {
@@ -448,6 +450,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                         treeDel (myDiffTree, parent, LEFTY);
                         treeDel (myDiffTree, parent, RIGHTY);
 
+                        myDiffTree->length -= 2;
+
                         myDiffTree->data[parent].type_of_value = NUMBER;
                         myDiffTree->data[parent].value.number = 0;
                     }
@@ -455,6 +459,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
                         treeDel (myDiffTree, parent, LEFTY);
                         union value copy = treeDel (myDiffTree, parent, RIGHTY);
+
+                        myDiffTree->length -= 2;
 
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
@@ -464,11 +470,15 @@ void treeCut (struct tree* myDiffTree, int parent) {
                         treeDel (myDiffTree, parent, LEFTY);
                         treeDel (myDiffTree, parent, RIGHTY);
 
+                        myDiffTree->length -= 2;
+
                         myDiffTree->data[parent].type_of_value = NUMBER;
                         myDiffTree->data[parent].value.number = 0;
                     } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
                         union value copy = treeDel (myDiffTree, parent, LEFTY);
                         treeDel (myDiffTree, parent, RIGHTY);
+
+                        myDiffTree->length -= 2;
 
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
@@ -485,6 +495,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                         treeDel (myDiffTree, parent, LEFTY);
                         union value copy = treeDel (myDiffTree, parent, RIGHTY);
 
+                        myDiffTree->length -= 2;
+
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
                     }
@@ -492,6 +504,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
                         union value copy = treeDel (myDiffTree, parent, LEFTY);
                         treeDel (myDiffTree, parent, RIGHTY);
+
+                        myDiffTree->length -= 2;
 
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
@@ -508,6 +522,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                         treeDel (myDiffTree, parent, RIGHTY);
                         union value copy = treeDel (myDiffTree, parent, LEFTY);
 
+                        myDiffTree->length -= 2;
+
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
                     }
@@ -522,6 +538,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
                         treeDel (myDiffTree, parent, RIGHTY);
                         union value copy = treeDel (myDiffTree, parent, LEFTY);
+
+                        myDiffTree->length -= 2;
 
                         myDiffTree->data[parent].type_of_value = VARIABLE;
                         myDiffTree->data[parent].value = copy;
