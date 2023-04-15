@@ -72,6 +72,8 @@ void fillingTree (struct tree* myTree, int parent) {
         findScope (myTree);
 
         int newparent = treeAdd (myTree, parent, value, type);
+        myTree->length++;
+        
         fillingTree (myTree, newparent); 
         fillingTree (myTree, newparent);
         
@@ -262,17 +264,17 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
     }
 }
 
-void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
-    parent = treeAdd (myDiffTree, parent, n->value, n->type_of_value);
+void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* firstNode, int parent) {
+    parent = treeAdd (myDiffTree, parent, firstNode->value, firstNode->type_of_value);
 
     myDiffTree->length += 1;
 
-    if (n->lefty != 0) {
-        treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), parent);
+    if (firstNode->lefty != 0) {
+        treeCopy (myDiffTree, myTree, &(myTree->data[firstNode->lefty]), parent);
     }
 
-    if (n->righty != 0) {
-        treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), parent);
+    if (firstNode->righty != 0) {
+        treeCopy (myDiffTree, myTree, &(myTree->data[firstNode->righty]), parent);
     }
 
     return;
@@ -285,7 +287,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             union value ZeroValue;
             ZeroValue.number = 0;
 
-            treeCtor (myDiffTree, NUMBER, ZeroValue);
+            treeCtor (myDiffTree, NUMBER, ZeroValue, nullptr);
 
             return;
             break;
@@ -552,9 +554,13 @@ void treeCut (struct tree* myDiffTree, int parent) {
     return;
 }
 
-void treeReduction (struct tree* myDiffTree, int parent) {
-    for (int i = 0; i < myDiffTree->length; i++) {
-        treeCut (myDiffTree);
+void treeReduction (struct tree &myDiffTree, int parent) {
+    for (int i = 0; i < myDiffTree.length; i++) {
+        treeCut (&myDiffTree);
+    }
+
+    if (myDiffTree.length * 2 > myDiffTree.size) {
+        treeResizeDown (myDiffTree);
     }
 }
 

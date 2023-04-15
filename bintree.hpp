@@ -71,16 +71,16 @@ struct tree {
     int currentSym = 0;
 
     FILE* log_file = nullptr;
-
-    //add depth for cutting max cycle?
 };
 
 
-void treeCtor (struct tree* myTree, int type, union value value);
+void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file = nullptr);
 
 void treeDtor (struct tree* myTree);
 
 void treeResizeUp (struct tree* myTree);
+
+void treeResizeDown (struct tree &myTree);
 
 int treeAdd (struct tree* myTree, int parent, union value value, int type);
 

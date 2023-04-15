@@ -16,7 +16,12 @@ enum operations {
     SUB = '-',
     DIV = '/',
     MUL = '*',
-    //POW = '^'
+    //ERROR = 0,
+    //POW = '^',
+    //SIN = 1,
+    //COS
+    //TG
+    //SQRT
 };
 
 void readTree (struct tree* myTree);
@@ -37,11 +42,11 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
 void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n);
 
-void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent);
+void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* firstNode, int parent);
 
 void treeCut (struct tree* myDiffTree, int parent = HEAD);
 
-void treeReduction (struct tree* myDiffTree, int parent = HEAD);
+void treeReduction (struct tree& myDiffTree, int parent = HEAD);
 
 union value treeDel (struct tree* myDiffTree, int parent, int child);
 

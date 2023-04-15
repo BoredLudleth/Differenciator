@@ -8,26 +8,22 @@ int main ()
 
     readTree (myTree);
     graph_dump (myTree);
-    treeReduction (myTree);
+    treeReduction (*myTree);
     graph_dump (myTree);
-
-    // [#1]CUTTING ORIGIN TREE
-    // for (int i = 0; i < 10; i++) {
-    //     treeCut (myTree, HEAD);
-    // }
 
     // [#2]Solving without x with CPU
     // FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
     // tree_eval (myTree, Equation);
 
     //Differenciation
+    //prev version (*(+(x)(x))(+(xD)(0)))
     struct tree deadTree;
     struct tree* myDiffTree = &deadTree;
 
     diffTree (myDiffTree, myTree, &(myTree->data[1]));
     graph_dump (myDiffTree);
 
-    treeReduction (myDiffTree);
+    treeReduction (*myDiffTree);
 
     graph_dump (myDiffTree);
 
@@ -38,7 +34,7 @@ int main ()
 }
 // TODO what if operation doesn't exist
 // TODO add sin, cos and other
-// TODO integrate checks? recursion is a problem would be slower... and with exit...
+// TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO return dx, not 1
 // TODO resize make little -> в ситоре надо перехватить файл с помощью последней переменной
 

@@ -1,16 +1,21 @@
 #include "bintree.hpp"
+#include "differenciator.hpp"
 
-void treeCtor (struct tree* myTree, int type, union value value) {
+void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file) {
     static int count_tree = 0;
 
-    char log_name[15] = "log";
-    char number_of_log[5] = "";
-    strcat (log_name, inttoa(count_tree, number_of_log));
-    strcat (log_name, ".html");
+    if (log_file == nullptr) {
+        char log_name[15] = "log";
+        char number_of_log[5] = "";
+        strcat (log_name, inttoa(count_tree, number_of_log));
+        strcat (log_name, ".html");
 
-    myTree->log_file = fopen (log_name, "w+");
+        myTree->log_file = fopen (log_name, "w+");
 
-    count_tree++;
+        count_tree++;
+    } else {
+        myTree->log_file = log_file;
+    }
 
     fprintf (myTree->log_file, "<pre>\n");
     
@@ -39,7 +44,7 @@ void treeCtor (struct tree* myTree, int type, union value value) {
         myTree->free[i] = i + 1;
         myTree->data[i].type_of_value = FREE;
     }
-    
+
     myTree->length = 1;
 
     myTree->free_node = 2;
@@ -109,7 +114,25 @@ void treeResizeUp (struct tree* myTree) {
         myTree->free[myTree->size - 1] = 0;
 }
 
+void treeResizeDown (struct tree &myTree) {
+    struct tree reallocTree;
+    struct tree* copyTree = &reallocTree;
 
+    treeCtor (copyTree, myTree.data[1].type_of_value, myTree.data[1].value);
+
+    if (myTree.data[1].lefty != 0) {
+        treeCopy (copyTree, &myTree, &(myTree.data[myTree.data[1].lefty]), HEAD);
+    }
+    if (myTree.data[1].righty != 0) {
+        treeCopy (copyTree, &myTree, &(myTree.data[myTree.data[1].righty]), HEAD);
+    }
+    
+    treeDtor (&myTree);
+
+    myTree = reallocTree;
+
+    fprintf (myTree.log_file, "Tree resized down\n");
+}
 
 int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     fprintf (myTree->log_file, "Adding new element to the tree\n");
