@@ -44,9 +44,11 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n);
 
 void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* firstNode, int parent);
 
-void treeCut (struct tree* myDiffTree, int parent = HEAD);
+struct tree* treeCut (struct tree* myDiffTree, int parent = HEAD);
 
-void treeReduction (struct tree& myDiffTree, int parent = HEAD);
+void treeReduction (struct tree* myDiffTree);
+
+int treeCmp (struct tree* srcTree, struct tree* dstTree);
 
 union value treeDel (struct tree* myDiffTree, int parent, int child);
 

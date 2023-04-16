@@ -80,7 +80,7 @@ void treeDtor (struct tree* myTree);
 
 void treeResizeUp (struct tree* myTree);
 
-void treeResizeDown (struct tree &myTree);
+void treeResizeDown (struct tree* myTree);
 
 int treeAdd (struct tree* myTree, int parent, union value value, int type);
 

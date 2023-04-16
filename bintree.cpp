@@ -114,24 +114,24 @@ void treeResizeUp (struct tree* myTree) {
         myTree->free[myTree->size - 1] = 0;
 }
 
-void treeResizeDown (struct tree &myTree) {
+void treeResizeDown (struct tree* myTree) {
     struct tree reallocTree;
     struct tree* copyTree = &reallocTree;
 
-    treeCtor (copyTree, myTree.data[1].type_of_value, myTree.data[1].value);
+    treeCtor (copyTree, myTree->data[1].type_of_value, myTree->data[1].value);
 
-    if (myTree.data[1].lefty != 0) {
-        treeCopy (copyTree, &myTree, &(myTree.data[myTree.data[1].lefty]), HEAD);
+    if (myTree->data[1].lefty != 0) {
+        treeCopy (copyTree, myTree, &(myTree->data[myTree->data[1].lefty]), HEAD);
     }
-    if (myTree.data[1].righty != 0) {
-        treeCopy (copyTree, &myTree, &(myTree.data[myTree.data[1].righty]), HEAD);
+    if (myTree->data[1].righty != 0) {
+        treeCopy (copyTree, myTree, &(myTree->data[myTree->data[1].righty]), HEAD);
     }
     
-    treeDtor (&myTree);
+    treeDtor (myTree);
 
-    myTree = reallocTree;
+    *myTree = reallocTree;
 
-    fprintf (myTree.log_file, "Tree resized down\n");
+    fprintf (myTree->log_file, "Tree resized down\n");
 }
 
 int treeAdd (struct tree* myTree, int parent, union value value, int type) {

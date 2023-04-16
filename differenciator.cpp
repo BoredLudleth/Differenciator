@@ -146,8 +146,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
         case NUMBER:
         {
             myDiffTree->length += 1;
-            union value ZeroValue;
-            ZeroValue.number = 0;
+            union value ZeroValue = {.number = 0.f};
 
             treeAdd (myDiffTree, parent, ZeroValue, NUMBER);
             return;
@@ -157,8 +156,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
         case VARIABLE:
         {
             myDiffTree->length += 1;
-            union value OneValue;
-            OneValue.number = 1;
+            union value OneValue = {.number = 1.f};
             
             treeAdd (myDiffTree, parent, OneValue, NUMBER);                //return dVAR
             return;
@@ -171,9 +169,9 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
             int left_left_parent = 0;
             int right_left_parent = 0;
 
-            union value SubValue;
-            union value PlusValue;
-            union value MulValue;
+            union value SubValue =  {.operation = '-'};
+            union value PlusValue = {.operation = '+'};
+            union value MulValue = {.operation = '*'};
 
             if (n->value.operation == '+') {
                 myDiffTree->length += 1;
@@ -190,7 +188,6 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
                 DR
                 return;
             } else if (n->value.operation == '*') {
-                PlusValue.operation = '+';
 
                 parent =  treeAdd (myDiffTree, parent, PlusValue, OPERATION);
 
@@ -211,14 +208,10 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
 
                 myDiffTree->length += 1;
-                
-                SubValue.operation = '-';
 
                 left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
 
                 myDiffTree->length += 1;
-
-                MulValue.operation = '*';
 
                 left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
 
@@ -284,8 +277,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
     switch (n->type_of_value) {
         case NUMBER:
         {
-            union value ZeroValue;
-            ZeroValue.number = 0;
+            union value ZeroValue = {.number = 0.f};
 
             treeCtor (myDiffTree, NUMBER, ZeroValue, nullptr);
 
@@ -295,8 +287,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
         
         case VARIABLE:
         {
-            union value OneValue;
-            OneValue.number = 1;
+            union value OneValue = {.number = 1};
 
             treeCtor (myDiffTree, NUMBER, OneValue);                //return dVAR vars independent
             return;
@@ -311,9 +302,9 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             int left_left_parent = 0;
             int right_left_parent = 0;
 
-            union value MulValue;
-            union value PlusValue;
-            union value SubValue;
+            union value SubValue =  {.operation = '-'};
+            union value PlusValue = {.operation = '+'};
+            union value MulValue = {.operation = '*'};
 
             if (n->value.operation == '+') {
                 treeCtor (myDiffTree, OPERATION, n->value);
@@ -349,12 +340,8 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             } else if (n->value.operation == '/') {
                 treeCtor (myDiffTree, OPERATION, n->value);
                 parent = HEAD;
-                
-                SubValue.operation = '-';
 
                 left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
-
-                MulValue.operation = '*';
 
                 left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
@@ -387,9 +374,9 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
 }
 
 
-void treeCut (struct tree* myDiffTree, int parent) {
-    union value a;
-    union value b;
+struct tree* treeCut (struct tree* myDiffTree, int parent) {
+    union value a = {.number = 0.f};
+    union value b = {.number = 0.f};
 
     if (myDiffTree->data[parent].type_of_value == OPERATION) {
         if ((myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER) && (myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER)) {
@@ -424,7 +411,8 @@ void treeCut (struct tree* myDiffTree, int parent) {
                     if (cmpFloats(b.number, 0)) {
                         myDiffTree->error = ERROR_DIVISION_ON_ZERO;
                         printf ("ERROR: Division on zero\n");
-                        return;
+                        
+                        return myDiffTree;
                     }
 
                     myDiffTree->data[parent].value.number = a.number / b.number;
@@ -441,7 +429,7 @@ void treeCut (struct tree* myDiffTree, int parent) {
             
         }
 
-    if (myDiffTree->data[parent].type_of_value == OPERATION) {          //check it if not cutted previosly
+    if (myDiffTree->data[parent].type_of_value == OPERATION) {
         switch (myDiffTree->data[parent].value.operation) {
             case MUL:
             {
@@ -569,22 +557,59 @@ void treeCut (struct tree* myDiffTree, int parent) {
     }
 
 
-    return;
+    return myDiffTree;
 }
 
-void treeReduction (struct tree &myDiffTree, int parent) {
-    for (int i = 0; i < myDiffTree.length; i++) {
-        treeCut (&myDiffTree);
+void treeReduction (struct tree* myDiffTree) {
+    struct tree myCTree = *myDiffTree;
+    struct tree* myDiffCopy = &myCTree;
+    while (treeCmp (treeCut(myDiffTree), myDiffCopy)) {// while tree changes
+        myCTree = *myDiffTree;
     }
 
-    if (myDiffTree.length * 2 > myDiffTree.size) {
+    if (myDiffTree->length * 2 > myDiffTree->size) {
         treeResizeDown (myDiffTree);
     }
 }
 
+int treeCmp (struct tree* srcTree, struct tree* dstTree) {
+    if (srcTree->length != dstTree->length) {
+        return 0;
+    }
+
+    if (srcTree->free_node != dstTree->free_node) {
+        return 0;
+    }
+
+    int size = srcTree->length;
+    for (int i = 0; i < size; i++) {
+        if (srcTree->data[i].lefty != dstTree->data[i].lefty) {
+            return 0;
+        }
+
+        if (srcTree->data[i].righty != dstTree->data[i].righty) {
+            return 0;
+        }
+
+        if (srcTree->data[i].type_of_value != dstTree->data[i].type_of_value) {
+            return 0;
+        }
+
+        if (!cmpFloats (srcTree->data[i].value.number, dstTree->data[i].value.number)) {
+            return 0;
+        }
+
+        if (srcTree->free[i] != dstTree->free[i]) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 union value treeDel (struct tree* myDiffTree, int parent, int child) {
-    union value result;
-    result.number = -1;
+    union value result = {.number = -1};
+
     if (child == LEFTY) {
         myDiffTree->data[myDiffTree->data[parent].lefty].lefty = 0;
         myDiffTree->data[myDiffTree->data[parent].lefty].righty = 0;

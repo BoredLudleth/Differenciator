@@ -10,7 +10,7 @@ int main ()
 
     readTree (myTree);
     graph_dump (myTree);
-    treeReduction (*myTree);
+    treeReduction (myTree);
     graph_dump (myTree);
 
     // [#2]Solving without x with CPU
@@ -25,14 +25,14 @@ int main ()
     diffTree (myDiffTree, myTree, &(myTree->data[1]));
     graph_dump (myDiffTree);
 
-    treeReduction (*myDiffTree);
+    treeReduction (myDiffTree);
 
     graph_dump (myDiffTree);
 
     treeDtor (myTree);
     treeDtor (myDiffTree);
 
-    printf ("out:%d\n", getG ("1+5*(1*5+17)$"));
+    printf ("out:%d\n", getG ("0/(0+1)$"));
 
     return 0;
 }
@@ -41,5 +41,6 @@ int main ()
 // TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO return dx, not 1
 // TODO ctor not make new log file to down realloced
+// TODO TEX-file
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))
