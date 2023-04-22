@@ -181,16 +181,16 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
             
             if (type == OPERATION) {
                 myTree->data[myTree->free_node].value = value;
-                printf ("Added in left: %s\n", value.operation);
+                printf ("Added operation in left: %s\n", value.operation);
                 fprintf (myTree->log_file, "Added operation  %s in left\n", value.operation);
             } else  if (type == NUMBER){
                 myTree->data[myTree->free_node].value.number  = value.number;
-                printf ("Added in left: %f\n", value.number);
+                printf ("Added number in left: %f\n", value.number);
                 fprintf (myTree->log_file, "Added number in left: %f\n", value.number);
             } else if (type == VARIABLE) {
                 myTree->data[myTree->free_node].value = value;
-                printf ("Added in left: %s\n", value.variable);
-                fprintf (myTree->log_file, "Added number in left: %s\n", value.variable);
+                printf ("Added variable in left: %s\n", value.variable);
+                fprintf (myTree->log_file, "Added variable in left: %s\n", value.variable);
             }
 
             myTree->data[myTree->free_node].type_of_value  = type;

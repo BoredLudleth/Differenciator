@@ -17,11 +17,11 @@ enum operations {
     SUB   = '-',
     DIV   = '/',
     MUL   = '*',
-    POW   = '^',
     SIN   = 's',
     COS   = 'c',
     TG    = 't',
-    SQRT  = 's'
+    ln    = 'l',
+    POW   = '^'
 };
 
 void readTree (struct tree* myTree);
