@@ -25,10 +25,18 @@ void readTree (struct tree* myTree) {
     if (typeOfNode == NUMBER) {
         sscanf (myTree->allText, TYPE_DESIG, &value.number);
     } else if (typeOfNode == OPERATION) {
-        sscanf (myTree->allText, "%c", &value.operation);           
-    } else if (typeOfNode == VARIABLE) {
         int i = 0;
 
+        while (myTree->allText[i] != '(') {
+            value.operation[i] = myTree->allText[i];
+            i++;
+        }
+
+        value.operation[i] = '\0';
+
+    } else if (typeOfNode == VARIABLE) {
+        int i = 0;
+        strcpy (value.variable, "\0\0\0\0");
         while (myTree->allText[i] != ')') {
             value.variable[i] = myTree->allText[i];
             i++;
@@ -57,7 +65,14 @@ void fillingTree (struct tree* myTree, int parent) {
         if (type == NUMBER) {
             sscanf (myTree->allText, TYPE_DESIG, &value.number);
         } else if (type == OPERATION) {
-            sscanf (myTree->allText, "%c", &value.operation);
+            int i = 0;
+
+            while (myTree->allText[i] != '(') {
+                value.operation[i] = myTree->allText[i];
+                i++;
+            }
+
+            value.variable[i] = '\0';
         } else if (type == VARIABLE) {
             int i = 0;
 
@@ -118,7 +133,7 @@ void print_node (struct node elem, FILE* Equation) {
     if (elem.type_of_value == NUMBER) {
         fprintf (Equation, "push %.0f\n", elem.value.number);
     } else if (elem.type_of_value == OPERATION) {
-        switch (elem.value.operation) {
+        switch (elem.value.operation[0]) {
             case '*':
                 fprintf (Equation, "mul\n");
                 break;
@@ -131,6 +146,7 @@ void print_node (struct node elem, FILE* Equation) {
             case '/':
                 fprintf (Equation, "div\n");
                 break;
+            //other cases!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             default:
                 printf ("Operation doesn't exist\n");
                 return;
@@ -141,12 +157,22 @@ void print_node (struct node elem, FILE* Equation) {
     }
 }
 
-void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent) {
+void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, char* dVar, int parent) {
+    char diffVar[4] = {};
+    diffVar[0] = 'd';
+    strcat (diffVar, dVar);
+    strcat (diffVar, "\0");
+
+    union value dVarUn = {.variable = {}};
+    strcpy (dVarUn.variable, diffVar);
+    strcat (dVarUn.variable, "\0");
+
+    union value ZeroValue = {.number = 0.f};
+
     switch (n->type_of_value) {
         case NUMBER:
         {
             myDiffTree->length += 1;
-            union value ZeroValue = {.number = 0.f};
 
             treeAdd (myDiffTree, parent, ZeroValue, NUMBER);
             return;
@@ -155,39 +181,42 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
         case VARIABLE:
         {
-            myDiffTree->length += 1;
-            union value OneValue = {.number = 1.f};
-            
-            treeAdd (myDiffTree, parent, OneValue, NUMBER);                //return dVAR
+            if (!strcmp (n->value.variable, dVar)) {
+                treeAdd (myDiffTree, parent, dVarUn, VARIABLE);
+                printf ("D TO X\n");
+            } else {
+                treeAdd (myDiffTree, parent, ZeroValue, NUMBER);                //return dVAR vars independent
+            }
+
             return;
             break;
         }
-        case OPERATION:
+        case OPERATION:                                                                         //add others!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             int left_parent = 0;
             int right_parent = 0;
             int left_left_parent = 0;
             int right_left_parent = 0;
 
-            union value SubValue =  {.operation = '-'};
-            union value PlusValue = {.operation = '+'};
-            union value MulValue = {.operation = '*'};
+            union value SubValue =  {.operation = "-"};
+            union value PlusValue = {.operation = "+"};
+            union value MulValue = {.operation = "*"};
 
-            if (n->value.operation == '+') {
+            if (!strcmp (n->value.operation, "+")) {
                 myDiffTree->length += 1;
 
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
                 DL
                 DR
                 return;
-            } else if (n->value.operation == '-') {
+            } else if (!strcmp (n->value.operation, "-")) {
                 myDiffTree->length += 1;
 
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
                 DL
                 DR
                 return;
-            } else if (n->value.operation == '*') {
+            } else if (!strcmp (n->value.operation, "*")) {
 
                 parent =  treeAdd (myDiffTree, parent, PlusValue, OPERATION);
 
@@ -197,14 +226,14 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
                 myDiffTree->length += 1;
 
-                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
 
                 right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
-                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
                 return;
-            } else if (n->value.operation == '/') {
+            } else if (!strcmp (n->value.operation, "/")) {
                 parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
 
                 myDiffTree->length += 1;
@@ -217,7 +246,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
                 myDiffTree->length += 1;
 
-                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
 
 
@@ -225,7 +254,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int
 
                 myDiffTree->length += 1;
 
-                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
 
                 right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
@@ -274,6 +303,18 @@ void treeCopy (struct tree* myDiffTree, struct tree* myTree, struct node* firstN
 }
 
 void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
+    char dVar[4] = {};
+    printf ("On which variable do you want to differentiate?\n");
+    scanf ("%s", dVar);
+    strcat (dVar, "\0");
+
+    char diffVar[4] = {};
+    strcat (diffVar, "d");
+    strncat (diffVar, dVar, 4);
+
+    union value dVarUn = {.variable = {}};
+    strcpy (dVarUn.variable, diffVar);
+
     switch (n->type_of_value) {
         case NUMBER:
         {
@@ -287,9 +328,13 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
         
         case VARIABLE:
         {
-            union value OneValue = {.number = 1};
+            if (!strcmp (n->value.variable, dVar)) {
+                treeCtor (myDiffTree, VARIABLE, dVarUn);
+            } else {
+                union value ZeroValue = {.number = 0.f};
+                treeCtor (myDiffTree, NUMBER, ZeroValue);                //return dVAR vars independent
+            }
 
-            treeCtor (myDiffTree, NUMBER, OneValue);                //return dVAR vars independent
             return;
             break;
         }
@@ -302,11 +347,11 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             int left_left_parent = 0;
             int right_left_parent = 0;
 
-            union value SubValue =  {.operation = '-'};
-            union value PlusValue = {.operation = '+'};
-            union value MulValue = {.operation = '*'};
+            union value SubValue =  {.operation = "-"};
+            union value PlusValue = {.operation = "+"};
+            union value MulValue = {.operation = "*"};
 
-            if (n->value.operation == '+') {
+            if (!strcmp (n->value.operation, "+")) {                                                                     //add others!!!!!!!!!!!!!!!!!!!!!!!
                 treeCtor (myDiffTree, OPERATION, n->value);
                 parent = HEAD;
 
@@ -314,7 +359,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 DR
 
                 return;
-            } else if (n->value.operation == '-') {
+            } else if (!strcmp (n->value.operation, "-")) {
                 treeCtor (myDiffTree, OPERATION, n->value);
                 parent = HEAD;
 
@@ -322,34 +367,32 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 DR
 
                 return;
-            } else if (n->value.operation == '*') {
-                PlusValue.operation = '+';
-
+            } else if (!strcmp (n->value.operation, "*")) {
                 treeCtor (myDiffTree, OPERATION, PlusValue);
                 parent = HEAD;
 
                 left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
-                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
 
                 right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
-                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
 
                 return;
-            } else if (n->value.operation == '/') {
+            } else if (!strcmp (n->value.operation,  "/")) {
                 treeCtor (myDiffTree, OPERATION, n->value);
                 parent = HEAD;
 
                 left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
 
                 left_left_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION);
-                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), left_left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
 
 
                 right_left_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
-                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), right_left_parent);
+                diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
 
                 right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
@@ -361,7 +404,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
             myTree->error = ERROR_UNKNOWN_OPERATION;
             printf ("ERROR:Unknown operation!\n");
             return;
-            break;                     //return one of branching
+            break;                     //return one of branching                                                            ???????????????????
         }
         default:
         {
@@ -372,7 +415,6 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
         }
     }
 }
-
 
 struct tree* treeCut (struct tree* myDiffTree, int parent) {
     union value a = {.number = 0.f};
@@ -387,7 +429,7 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
 
             myDiffTree->data[parent].type_of_value = NUMBER;
 
-            switch (myDiffTree->data[parent].value.operation) {
+            switch (myDiffTree->data[parent].value.operation[0]) {
                 case ADD:
                 {
                     myDiffTree->data[parent].value.number = a.number + b.number;
@@ -430,7 +472,7 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
         }
 
     if (myDiffTree->data[parent].type_of_value == OPERATION) {
-        switch (myDiffTree->data[parent].value.operation) {
+        switch (myDiffTree->data[parent].value.operation[0]) {
             case MUL:
             {
                 if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
@@ -540,7 +582,7 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
             default:
             {
                 printf ("parent:%d ", parent);
-                printf ("op:%c- ", myDiffTree->data[parent].value.operation);
+                printf ("op:%s- ", myDiffTree->data[parent].value.operation);
                 myDiffTree->error = ERROR_UNKNOWN_OPERATION;
                 printf ("UNKNOWN OPERATION IN TREE_CUT\n");
                 break;
@@ -563,7 +605,7 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
 void treeReduction (struct tree* myDiffTree) {
     struct tree myCTree = *myDiffTree;
     struct tree* myDiffCopy = &myCTree;
-    while (treeCmp (treeCut(myDiffTree), myDiffCopy)) {// while tree changes
+    while (!treeCmp (treeCut(myDiffTree), myDiffCopy)) {// while tree changes
         myCTree = *myDiffTree;
     }
 

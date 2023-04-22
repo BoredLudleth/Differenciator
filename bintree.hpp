@@ -19,7 +19,7 @@ typedef float _t;
 
 union value {
     float number;
-    char operation;
+    char operation[4];
     char variable[4];
 };
 
@@ -46,9 +46,8 @@ enum Errors {
 };
 
 struct node {
-    int type_of_value = FREE;
     union value value;
-
+    int type_of_value = FREE;
 
     int lefty = 0;
     int righty = 0;
@@ -74,7 +73,7 @@ struct tree {
 };
 
 
-void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file = nullptr);
+void treeCtor (struct tree* myTree, int type, union value value, FILE* old_log = nullptr);
 
 void treeDtor (struct tree* myTree);
 

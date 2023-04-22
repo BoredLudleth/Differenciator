@@ -12,16 +12,16 @@
 #define EPSILON 1e-5
 
 enum operations {
-    ADD = '+',
-    SUB = '-',
-    DIV = '/',
-    MUL = '*',
-    //ERROR = 0,
-    //POW = '^',
-    //SIN = 1,
-    //COS
-    //TG
-    //SQRT
+    ERROR = 0,
+    ADD   = '+',
+    SUB   = '-',
+    DIV   = '/',
+    MUL   = '*',
+    POW   = '^',
+    SIN   = 's',
+    COS   = 'c',
+    TG    = 't',
+    SQRT  = 's'
 };
 
 void readTree (struct tree* myTree);
@@ -38,7 +38,7 @@ void tree_eval (struct tree* myTree, FILE* Equation, int myTreeHead = HEAD);
 
 void print_node (struct node elem, FILE* Equation);
 
-void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, int parent = HEAD);
+void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, char* dVar, int parent);
 
 void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n);
 

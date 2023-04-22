@@ -1,10 +1,11 @@
 #include "bintree.hpp"
 #include "differenciator.hpp"
 
-void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file) {
+void treeCtor (struct tree* myTree, int type, union value value, FILE* old_log) {
     static int count_tree = 0;
 
-    if (log_file == nullptr) {
+    if (old_log == nullptr) {
+        printf ("NEW LOG\n");
         char log_name[15] = "log";
         char number_of_log[5] = "";
         strcat (log_name, inttoa(count_tree, number_of_log));
@@ -14,7 +15,7 @@ void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file)
 
         count_tree++;
     } else {
-        myTree->log_file = log_file;
+        myTree->log_file = old_log;
     }
 
     fprintf (myTree->log_file, "<pre>\n");
@@ -31,7 +32,7 @@ void treeCtor (struct tree* myTree, int type, union value value, FILE* log_file)
     myTree->free_node = 1;
 
     if (type == OPERATION) {
-        myTree->data[myTree->free_node].value.operation = value.operation; 
+        myTree->data[myTree->free_node].value = value; 
     } else  if (type == NUMBER){
         myTree->data[myTree->free_node].value.number = value.number;
     } else if (type == VARIABLE) {
@@ -118,7 +119,7 @@ void treeResizeDown (struct tree* myTree) {
     struct tree reallocTree;
     struct tree* copyTree = &reallocTree;
 
-    treeCtor (copyTree, myTree->data[1].type_of_value, myTree->data[1].value);
+    treeCtor (copyTree, myTree->data[1].type_of_value, myTree->data[1].value, myTree->log_file);
 
     if (myTree->data[1].lefty != 0) {
         treeCopy (copyTree, myTree, &(myTree->data[myTree->data[1].lefty]), HEAD);
@@ -179,9 +180,9 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
             myTree->data[parent].lefty = myTree->free_node;
             
             if (type == OPERATION) {
-                myTree->data[myTree->free_node].value.operation = value.operation;
-                printf ("Added in left: %d\n", value.operation);
-                fprintf (myTree->log_file, "Added operation  %c in left\n", value.operation);
+                myTree->data[myTree->free_node].value = value;
+                printf ("Added in left: %s\n", value.operation);
+                fprintf (myTree->log_file, "Added operation  %s in left\n", value.operation);
             } else  if (type == NUMBER){
                 myTree->data[myTree->free_node].value.number  = value.number;
                 printf ("Added in left: %f\n", value.number);
@@ -202,9 +203,9 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
             myTree->data[parent].righty = myTree->free_node;
             
             if (type == OPERATION) {
-                myTree->data[myTree->free_node].value.operation = value.operation; 
-                printf ("Added in right: %d\n", value.operation);
-                fprintf (myTree->log_file, "Added operation  %c in right\n", value.operation);
+                myTree->data[myTree->free_node].value = value; 
+                printf ("Added in right: %s\n", value.operation);
+                fprintf (myTree->log_file, "Added operation  %s in right\n", value.operation);
             } else  if (type == NUMBER){
                 myTree->data[myTree->free_node].value.number  = value.number;
                 printf ("Added in right: %f\n", value.number);
@@ -298,7 +299,7 @@ void graph_dump (struct tree* myTree) {
             fprintf (output, "node%d [label = \"{<f1> value = %f|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> num}\", shape=record, style = filled, fillcolor = \"#d1234f\"];\n",
                     i, myTree->data[i].value.number, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);     
         } else if (myTree->data[i].type_of_value == OPERATION) {
-            fprintf (output, "node%d [label = \"{<f1> value = %c|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6>op}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
+            fprintf (output, "node%d [label = \"{<f1> value = %s|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6>op}\", shape=record, style = filled, fillcolor = \"#d0ffff\"];\n",
                     i, myTree->data[i].value.operation, i, myTree->data[i].lefty, myTree->data[i].righty, myTree->free[i]);   
         } else if (myTree->data[i].type_of_value == VARIABLE) {
             fprintf (output, "node%d [label = \"{<f1> value = %s|  <f2> addr = %d| {<f3> left = %d |<f4> right = %d}| <f5> free = %d| <f6> var}\", shape=record, style = filled, fillcolor = \"#00cf00\"];\n",
