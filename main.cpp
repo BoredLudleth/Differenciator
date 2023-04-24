@@ -38,7 +38,7 @@ int main ()
 
     return 0;
 }
-// TODO cutter for all functions
+// TODO make delete sub tree
 // TODO reccursive reader
 // TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO TEX-file

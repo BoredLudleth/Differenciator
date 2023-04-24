@@ -20,7 +20,7 @@ enum operations {
     SIN   = 's',
     COS   = 'c',
     TG    = 't',
-    ln    = 'l',
+    LN    = 'l',
     POW   = '^'
 };
 
@@ -50,7 +50,11 @@ void treeReduction (struct tree* myDiffTree);
 
 int treeCmp (struct tree* srcTree, struct tree* dstTree);
 
-union value treeDel (struct tree* myDiffTree, int parent, int child);
+union value treeDel (struct tree* myTree, int parent, int child);
+
+void deleteSubTree (struct tree* myTree, int parent);
+
+void treeDelCurr (struct tree* myTree, int parent);
 
 int cmpFloats (float a, float b);
 

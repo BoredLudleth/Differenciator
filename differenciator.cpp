@@ -640,141 +640,227 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
                     break;
                 }
 
+                case POW:
+                {
+                    myDiffTree->data[parent].value.number = pow (a.number, b.number);
+                    break;
+                }
+
                 default:
                 {
                     // myDiffTree->error = ERROR_UNKNOWN_OPERATION;
                     // printf ("UNKNOWN OPERATION IN TREE_CUT\n");
                     break;
                 }
+
             }
             
+        } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[parent].righty == 0) {
+            union value c = {.number = 0.f};
+            //myDiffTree->data[parent].value.number;
+            c = treeDel (myDiffTree, parent, LEFTY);
+
+            if (!strcmp (myDiffTree->data[parent].value.operation, "ln")) {
+                if (c.number > 0) {
+                    myDiffTree->data[parent].value.number = log (c.number);
+                } else {
+                    printf ("Can't take ln from number less 0\n");
+                }
+            }
+
+            if (!strcmp (myDiffTree->data[parent].value.operation, "sin")) {
+                myDiffTree->data[parent].value.number = sin (c.number);
+            }
+
+            if (!strcmp (myDiffTree->data[parent].value.operation, "cos")) {
+                myDiffTree->data[parent].value.number = cos (c.number);
+            }
+
+            if (!strcmp (myDiffTree->data[parent].value.operation, "tg")) {
+                myDiffTree->data[parent].value.number = tan (c.number);
+            }
         }
 
-    if (myDiffTree->data[parent].type_of_value == OPERATION) {
-        switch (myDiffTree->data[parent].value.operation[0]) {
-            case MUL:
-            {
-                if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
-                        treeDel (myDiffTree, parent, LEFTY);
-                        treeDel (myDiffTree, parent, RIGHTY);
+    switch (myDiffTree->data[parent].value.operation[0]) {
+        case MUL:
+        {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
 
-                        myDiffTree->length -= 2;
+                    myDiffTree->length -= 2;
 
-                        myDiffTree->data[parent].type_of_value = NUMBER;
-                        myDiffTree->data[parent].value.number = 0;
-                    }
-
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
-                        treeDel (myDiffTree, parent, LEFTY);
-                        union value copy = treeDel (myDiffTree, parent, RIGHTY);
-
-                        myDiffTree->length -= 2;
-
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
-                } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
-                        treeDel (myDiffTree, parent, LEFTY);
-                        treeDel (myDiffTree, parent, RIGHTY);
-
-                        myDiffTree->length -= 2;
-
-                        myDiffTree->data[parent].type_of_value = NUMBER;
-                        myDiffTree->data[parent].value.number = 0;
-                    } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
-                        union value copy = treeDel (myDiffTree, parent, LEFTY);
-                        treeDel (myDiffTree, parent, RIGHTY);
-
-                        myDiffTree->length -= 2;
-
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 0;
                 }
 
-                break;
-            }
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    union value copy = treeDel (myDiffTree, parent, RIGHTY);
 
-            case ADD:
-            {
-                if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
-                        treeDel (myDiffTree, parent, LEFTY);
-                        union value copy = treeDel (myDiffTree, parent, RIGHTY);
+                    myDiffTree->length -= 2;
 
-                        myDiffTree->length -= 2;
-
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
-                } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
-                        union value copy = treeDel (myDiffTree, parent, LEFTY);
-                        treeDel (myDiffTree, parent, RIGHTY);
-
-                        myDiffTree->length -= 2;
-
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
                 }
+            } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
 
-                break;
-            }
+                    myDiffTree->length -= 2;
 
-            case DIV:
-            {
-                if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
-                        treeDel (myDiffTree, parent, RIGHTY);
-                        union value copy = treeDel (myDiffTree, parent, LEFTY);
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 0;
+                } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
+                    union value copy = treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
 
-                        myDiffTree->length -= 2;
+                    myDiffTree->length -= 2;
 
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
                 }
-
-                break;
             }
 
-            case SUB:
-            {
-                if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
-                    if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
-                        treeDel (myDiffTree, parent, RIGHTY);
-                        union value copy = treeDel (myDiffTree, parent, LEFTY);
+            break;
+        }
 
-                        myDiffTree->length -= 2;
+        case ADD:
+        {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    union value copy = treeDel (myDiffTree, parent, RIGHTY);
 
-                        myDiffTree->data[parent].type_of_value = VARIABLE;
-                        myDiffTree->data[parent].value = copy;
-                    }
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
                 }
+            } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    union value copy = treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
 
-                break;
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
+                }
             }
 
-            default:
-            {
-                printf ("parent:%d ", parent);
-                printf ("op:%s- ", myDiffTree->data[parent].value.operation);
-                myDiffTree->error = ERROR_UNKNOWN_OPERATION;
-                printf ("UNKNOWN OPERATION IN TREE_CUT\n");
-                break;
+            break;
+        }
+
+        case DIV:
+        {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
+                    treeDel (myDiffTree, parent, RIGHTY);
+                    union value copy = treeDel (myDiffTree, parent, LEFTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
+                }
             }
-        };
+
+            break;
+        }
+
+        case SUB:
+        {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, RIGHTY);
+                    union value copy = treeDel (myDiffTree, parent, LEFTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
+                }
+            }
+
+            break;
+        }
+
+        case POW: 
+        {
+            if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == VARIABLE) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 1)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 1;
+                } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 0;
+                }
+            } else if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == VARIABLE && myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER) {
+                if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 1)) {
+                    union value copy = treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = VARIABLE;
+                    myDiffTree->data[parent].value = copy;
+                } else if (cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+                    treeDel (myDiffTree, parent, LEFTY);
+                    treeDel (myDiffTree, parent, RIGHTY);
+
+                    myDiffTree->length -= 2;
+
+                    myDiffTree->data[parent].type_of_value = NUMBER;
+                    myDiffTree->data[parent].value.number = 1;
+                }            
+            }
+            break;
+        }
+
+        default:
+        {
+            // printf ("parent:%d ", parent);
+            // printf ("op:%s- ", myDiffTree->data[parent].value.operation);
+            // myDiffTree->error = ERROR_UNKNOWN_OPERATION;
+            // printf ("UNKNOWN OPERATION IN TREE_CUT\n");
+            break;
+        }
+    };
+
+    if (myDiffTree->data[parent].type_of_value == OPERATION && !strcmp (myDiffTree->data[parent].value.operation, "*")) {
+        if (myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value == NUMBER && cmpFloats(myDiffTree->data[myDiffTree->data[parent].lefty].value.number, 0)) {
+            deleteSubTree (myDiffTree, myDiffTree->data[parent].lefty);
+            deleteSubTree (myDiffTree, myDiffTree->data[parent].righty);
+            myDiffTree->data[parent].type_of_value = NUMBER;
+            myDiffTree->data[parent].value.number = 0;
+        }
+        if (myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER && cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
+            deleteSubTree (myDiffTree, myDiffTree->data[parent].lefty);
+            deleteSubTree (myDiffTree, myDiffTree->data[parent].righty);
+            myDiffTree->data[parent].type_of_value = NUMBER;
+            myDiffTree->data[parent].value.number = 0;
+        }
     }
-        if (myDiffTree->data[parent].lefty != 0) {
-            treeCut (myDiffTree, myDiffTree->data[parent].lefty);
-        }
+    }
+    if (myDiffTree->data[parent].lefty != 0) {
+        treeCut (myDiffTree, myDiffTree->data[parent].lefty);
+    }
 
-        if (myDiffTree->data[parent].righty != 0) {
-            treeCut (myDiffTree, myDiffTree->data[parent].righty);
-        }
+    if (myDiffTree->data[parent].righty != 0) {
+        treeCut (myDiffTree, myDiffTree->data[parent].righty);
     }
 
 
@@ -828,43 +914,67 @@ int treeCmp (struct tree* srcTree, struct tree* dstTree) {
     return 1;
 }
 
-union value treeDel (struct tree* myDiffTree, int parent, int child) {
+union value treeDel (struct tree* myTree, int parent, int child) {
     union value result = {.number = -1};
 
     if (child == LEFTY) {
-        myDiffTree->data[myDiffTree->data[parent].lefty].lefty = 0;
-        myDiffTree->data[myDiffTree->data[parent].lefty].righty = 0;
-        myDiffTree->data[myDiffTree->data[parent].lefty].type_of_value = FREE;
+        myTree->data[myTree->data[parent].lefty].lefty = 0;
+        myTree->data[myTree->data[parent].lefty].righty = 0;
+        myTree->data[myTree->data[parent].lefty].type_of_value = FREE;
 
-        result = myDiffTree->data[myDiffTree->data[parent].lefty].value;
+        result = myTree->data[myTree->data[parent].lefty].value;
 
-        myDiffTree->data[myDiffTree->data[parent].lefty].value.number = POISON;
-        myDiffTree->free[myDiffTree->data[parent].lefty] = myDiffTree->free_node;
-        myDiffTree->free_node = myDiffTree->data[parent].lefty;
+        myTree->data[myTree->data[parent].lefty].value.number = POISON;
+        myTree->free[myTree->data[parent].lefty] = myTree->free_node;
+        myTree->free_node = myTree->data[parent].lefty;
 
-        myDiffTree->data[parent].lefty = 0;
+        myTree->data[parent].lefty = 0;
 
         return result;
     } else if (child == RIGHTY) {
-        myDiffTree->data[myDiffTree->data[parent].righty].lefty = 0;
-        myDiffTree->data[myDiffTree->data[parent].righty].righty = 0;
-        myDiffTree->data[myDiffTree->data[parent].righty].type_of_value = FREE;
+        myTree->data[myTree->data[parent].righty].lefty = 0;
+        myTree->data[myTree->data[parent].righty].righty = 0;
+        myTree->data[myTree->data[parent].righty].type_of_value = FREE;
 
-        result = myDiffTree->data[myDiffTree->data[parent].righty].value;
+        result = myTree->data[myTree->data[parent].righty].value;
 
-        myDiffTree->data[myDiffTree->data[parent].righty].value.number = POISON;
-        myDiffTree->free[myDiffTree->data[parent].righty] = myDiffTree->free_node;
-        myDiffTree->free_node = myDiffTree->data[parent].lefty;
+        myTree->data[myTree->data[parent].righty].value.number = POISON;
+        myTree->free[myTree->data[parent].righty] = myTree->free_node;
+        myTree->free_node = myTree->data[parent].lefty;
 
-        myDiffTree->data[parent].righty = 0;
+        myTree->data[parent].righty = 0;
 
         return result;
     } else {
-        myDiffTree->error = ERROR_DELETE_UNKNOWN_CHILD;
+        myTree->error = ERROR_DELETE_UNKNOWN_CHILD;
         printf ("ERROR: OMG... No so much children in node!");
 
         return result;
     }
+}
+
+void deleteSubTree (struct tree* myTree, int parent) {
+    if (myTree->data[parent].lefty != 0) {
+        deleteSubTree (myTree, myTree->data[parent].lefty);
+    }
+
+    if (myTree->data[parent].righty != 0) {
+        deleteSubTree (myTree, myTree->data[parent].righty);
+    }
+    
+    treeDelCurr (myTree, parent);
+}
+
+void treeDelCurr (struct tree* myTree, int parent) {
+    myTree->data[parent].value = {.number = POISON};
+    myTree->data[parent].type_of_value = FREE;
+    myTree->data[parent].lefty = 0;
+    myTree->data[parent].righty = 0;
+
+    myTree->free[parent] = myTree->free_node;
+    myTree->free_node = parent;
+
+    myTree->length--;
 }
 
 int cmpFloats (float a, float b) {
