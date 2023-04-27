@@ -4,8 +4,8 @@ node [shape=record fontname=Arial];
 edge [dir=both, style="", constraint=false, color = darkred]rankdir = TB;
 splines = "ortho"
 head [label = "HEAD", style = filled, fillcolor = "#d01234"];
-node1 [label = "{<f1> value = ^|  <f2> addr = 1| {<f3> left = 2 |<f4> right = 3}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
-node2 [label = "{<f1> value = 10.000000|  <f2> addr = 2| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6> num}", shape=record, style = filled, fillcolor = "#d1234f"];
+node1 [label = "{<f1> value = sin|  <f2> addr = 1| {<f3> left = 2 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
+node2 [label = "{<f1> value = cos|  <f2> addr = 2| {<f3> left = 3 |<f4> right = 0}| <f5> free = -1| <f6>op}", shape=record, style = filled, fillcolor = "#d0ffff"];
 node3 [label = "{<f1> value = x|  <f2> addr = 3| {<f3> left = 0 |<f4> right = 0}| <f5> free = -1| <f6> var}", shape=record, style = filled, fillcolor = "#00cf00"];
 node4 [label = "{<f1> value = 0.000000|  <f2> addr = 4| {<f3> left = 0 |<f4> right = 0}| <f5> free = 5| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
 node5 [label = "{<f1> value = 0.000000|  <f2> addr = 5| {<f3> left = 0 |<f4> right = 0}| <f5> free = 6| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
@@ -14,5 +14,5 @@ node7 [label = "{<f1> value = 0.000000|  <f2> addr = 7| {<f3> left = 0 |<f4> rig
 node8 [label = "{<f1> value = 0.000000|  <f2> addr = 8| {<f3> left = 0 |<f4> right = 0}| <f5> free = 9| <f6> free}", shape=record, style = filled, fillcolor = "#ffffaf"];
 node9 [label = "{<f1> value = 0.000000|  <f2> addr = 9| {<f3> left = 0 |<f4> right = 0}| <f5> free = 0| <f6> num}", shape=record, style = filled, fillcolor = "#d1234f"];
 node1 -> node2[dir=both, style=filled, constraint=true];
-node1 -> node3[dir=both, style=filled, constraint=true];
+node2 -> node3[dir=both, style=filled, constraint=true];
 }

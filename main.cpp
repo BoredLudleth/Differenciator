@@ -38,8 +38,8 @@ int main ()
 
     return 0;
 }
-// TODO make delete sub tree
-// TODO reccursive reader
+// TODO flash code
+// TODO reccursive reader whould be something like on print left_child -> current -> right child
 // TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO TEX-file
 
