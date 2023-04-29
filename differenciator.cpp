@@ -171,7 +171,7 @@ void print_node (struct node elem, FILE* Equation) {
             case '/':
                 fprintf (Equation, "div\n");
                 break;
-            //other cases!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //other cases!
             default:
                 printf ("Operation doesn't exist\n");
                 return;
@@ -237,14 +237,14 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
             if (!strcmp (n->value.operation, "+")) {
                 myDiffTree->length += 1;
 
-                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                parent = ADD_OPERATION
                 DL
                 DR
                 return;
             } else if (!strcmp (n->value.operation, "-")) {
                 myDiffTree->length += 1;
 
-                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                parent = ADD_OPERATION
                 DL
                 DR
                 return;
@@ -254,19 +254,19 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
 
                 myDiffTree->length += 1;
 
-                left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                left_parent = ADD_OPERATION
 
                 myDiffTree->length += 1;
 
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                right_parent = ADD_OPERATION
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
                 return;
             } else if (!strcmp (n->value.operation, "/")) {
-                parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                parent = ADD_OPERATION
 
                 myDiffTree->length += 1;
 
@@ -289,7 +289,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                right_parent = ADD_MUL
 
                 myDiffTree->length += 1;
 
@@ -299,7 +299,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 return;
                 break;
             } else if (!strcmp (n->value.operation, "ln")) {
-                parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                parent = ADD_MUL
 
                 left_parent = treeAdd (myDiffTree, parent, DivValue, OPERATION);
                 treeAdd (myDiffTree, left_parent, OneValue, NUMBER);
@@ -309,7 +309,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 return;
                 break;
             } else if (!strcmp (n->value.operation, "sin")) {
-                parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                parent = ADD_MUL
 
                 left_parent = treeAdd (myDiffTree, parent, CosValue, OPERATION);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), left_parent);
@@ -318,7 +318,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 return;
                 break;
             } else if (!strcmp (n->value.operation, "cos")) {
-                parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                parent = ADD_MUL
 
                 left_parent = treeAdd (myDiffTree, parent, SubValue, OPERATION);
                 treeAdd (myDiffTree, left_parent, ZeroValue, NUMBER);
@@ -329,7 +329,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 return;
                 break;
             } else if (!strcmp (n->value.operation, "tg")) {
-                parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                parent = ADD_MUL
 
                 left_parent = treeAdd (myDiffTree, parent, DivValue, OPERATION);
                 treeAdd (myDiffTree, left_parent, OneValue, NUMBER);
@@ -343,7 +343,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 break;
             } else if (!strcmp (n->value.operation, "^")) {
                 parent = treeAdd (myDiffTree, parent, PlusValue, OPERATION);
-                left_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                left_parent = ADD_MUL
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
                 int left_right_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION); 
                 int left_right_left_parent = treeAdd (myDiffTree, left_right_parent, PowValue, OPERATION);
@@ -353,7 +353,7 @@ void diffNode (struct tree* myDiffTree, struct tree* myTree, struct node* n, cha
                 treeAdd (myDiffTree, left_right_left_right, OneValue, NUMBER); 
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_right_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                right_parent = ADD_MUL
                 treeCopy (myDiffTree, myTree, n, right_parent);   
                 int right_right_parent = treeAdd (myDiffTree, right_parent, MulValue, OPERATION);
                 int right_right_left_parent = treeAdd (myDiffTree, right_right_parent, LnValue, OPERATION);
@@ -476,11 +476,11 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 treeCtor (myDiffTree, OPERATION, PlusValue);
                 parent = HEAD;
 
-                left_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                left_parent = ADD_OPERATION
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, n->value, OPERATION);
+                right_parent = ADD_OPERATION
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_parent);
 
@@ -496,11 +496,11 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_left_parent);
 
 
-                right_left_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                right_left_parent = ADD_MUL
                 diffNode (myDiffTree, myTree, &(myTree->data[n->righty]), dVar, right_left_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->lefty]), right_left_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                right_parent = ADD_MUL
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), right_parent);
 
@@ -558,7 +558,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 treeCtor (myDiffTree, OPERATION, PlusValue);
                 parent = HEAD;
 
-                left_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                left_parent = ADD_MUL
                 treeCopy (myDiffTree, myTree, &(myTree->data[n->righty]), left_parent);
                 int left_right_parent = treeAdd (myDiffTree, left_parent, MulValue, OPERATION); 
                 int left_right_left_parent = treeAdd (myDiffTree, left_right_parent, PowValue, OPERATION);
@@ -568,7 +568,7 @@ void diffTree (struct tree* myDiffTree, struct tree* myTree, struct node* n) {
                 treeAdd (myDiffTree, left_right_left_right, OneValue, NUMBER); 
                 diffNode (myDiffTree, myTree, &(myTree->data[n->lefty]), dVar, left_right_parent);
 
-                right_parent = treeAdd (myDiffTree, parent, MulValue, OPERATION);
+                right_parent = ADD_MUL
                 treeCopy (myDiffTree, myTree, n, right_parent);   
                 int right_right_parent = treeAdd (myDiffTree, right_parent, MulValue, OPERATION);
                 int right_right_left_parent = treeAdd (myDiffTree, right_right_parent, LnValue, OPERATION);
@@ -922,31 +922,31 @@ union value treeDel (struct tree* myTree, int parent, int child) {
     union value result = {.number = -1};
 
     if (child == LEFTY) {
-        myTree->data[myTree->data[parent].lefty].lefty = 0;
-        myTree->data[myTree->data[parent].lefty].righty = 0;
-        myTree->data[myTree->data[parent].lefty].type_of_value = FREE;
+        myTree->data[PARENTLEFT].lefty = 0;
+        myTree->data[PARENTLEFT].righty = 0;
+        myTree->data[PARENTLEFT].type_of_value = FREE;
 
-        result = myTree->data[myTree->data[parent].lefty].value;
+        result = myTree->data[PARENTLEFT].value;
 
-        myTree->data[myTree->data[parent].lefty].value.number = POISON;
-        myTree->free[myTree->data[parent].lefty] = myTree->free_node;
-        myTree->free_node = myTree->data[parent].lefty;
+        myTree->data[PARENTLEFT].value.number = POISON;
+        myTree->free[PARENTLEFT] = myTree->free_node;
+        myTree->free_node = PARENTLEFT;
 
-        myTree->data[parent].lefty = 0;
+        PARENTLEFT = 0;
 
         return result;
     } else if (child == RIGHTY) {
-        myTree->data[myTree->data[parent].righty].lefty = 0;
-        myTree->data[myTree->data[parent].righty].righty = 0;
-        myTree->data[myTree->data[parent].righty].type_of_value = FREE;
+        myTree->data[PARENTRIGHT].lefty = 0;
+        myTree->data[PARENTRIGHT].righty = 0;
+        myTree->data[PARENTRIGHT].type_of_value = FREE;
 
-        result = myTree->data[myTree->data[parent].righty].value;
+        result = myTree->data[PARENTRIGHT].value;
 
-        myTree->data[myTree->data[parent].righty].value.number = POISON;
-        myTree->free[myTree->data[parent].righty] = myTree->free_node;
-        myTree->free_node = myTree->data[parent].lefty;
+        myTree->data[PARENTRIGHT].value.number = POISON;
+        myTree->free[PARENTRIGHT] = myTree->free_node;
+        myTree->free_node = PARENTLEFT;
 
-        myTree->data[parent].righty = 0;
+        PARENTRIGHT = 0;
 
         return result;
     } else {
@@ -958,12 +958,12 @@ union value treeDel (struct tree* myTree, int parent, int child) {
 }
 
 void deleteSubTree (struct tree* myTree, int parent) {
-    if (myTree->data[parent].lefty != 0) {
-        deleteSubTree (myTree, myTree->data[parent].lefty);
+    if (PARENTLEFT != 0) {
+        deleteSubTree (myTree, PARENTLEFT);
     }
 
-    if (myTree->data[parent].righty != 0) {
-        deleteSubTree (myTree, myTree->data[parent].righty);
+    if (PARENTRIGHT != 0) {
+        deleteSubTree (myTree, PARENTRIGHT);
     }
     
     treeDelCurr (myTree, parent);
@@ -972,8 +972,8 @@ void deleteSubTree (struct tree* myTree, int parent) {
 void treeDelCurr (struct tree* myTree, int parent) {
     myTree->data[parent].value = {.number = POISON};
     myTree->data[parent].type_of_value = FREE;
-    myTree->data[parent].lefty = 0;
-    myTree->data[parent].righty = 0;
+    PARENTLEFT = 0;
+    PARENTRIGHT = 0;
 
     myTree->free[parent] = myTree->free_node;
     myTree->free_node = parent;
@@ -987,4 +987,57 @@ int cmpFloats (float a, float b) {
     }
 
     return 0;
+}
+
+void writeTex (struct tree* myTree, int current, FILE* f) {
+    if (myTree->data[current].type_of_value == OPERATION) {
+        if (!strcmp (myTree->data[current].value.operation, "sin")) {
+            fprintf(f, "\\sin(");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf (f, ")");
+        } else if (!strcmp (myTree->data[current].value.operation, "cos")) {
+            fprintf(f, "\\cos(");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf (f, ")");
+        } else if (!strcmp (myTree->data[current].value.operation, "tg")) {
+            fprintf(f, "\\tg(");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf (f, ")");
+        } else if (!strcmp (myTree->data[current].value.operation, "ln")) {
+            fprintf(f, "\\ln(");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf (f, ")");
+        } else if (!strcmp (myTree->data[current].value.operation, "/")) {
+            fprintf(f, "\\frac{");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf (f, "}");
+            
+            fprintf(f, "{");
+            writeTex (myTree, myTree->data[current].righty, f);
+            fprintf (f, "}");
+        } else if (!strcmp (myTree->data[current].value.operation, "+")) {
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf(f, " + ");
+            writeTex (myTree, myTree->data[current].righty, f);
+        } else if (!strcmp (myTree->data[current].value.operation, "-")) {
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf(f, " - ");
+            writeTex (myTree, myTree->data[current].righty, f);
+        } else if (!strcmp (myTree->data[current].value.operation, "*")) {
+            fprintf(f, "(");
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf(f, ") \\cdot (");
+            writeTex (myTree, myTree->data[current].righty, f);
+            fprintf(f, ")");
+        } else if (!strcmp (myTree->data[current].value.operation, "^")) {
+            writeTex (myTree, myTree->data[current].lefty, f);
+            fprintf(f, "^{");
+            writeTex (myTree, myTree->data[current].righty, f);
+            fprintf(f, "}");
+        }
+    } else if (myTree->data[current].type_of_value == VARIABLE) {
+        fprintf (f, "%s", myTree->data[current].value.variable);
+    } else if (myTree->data[current].type_of_value == NUMBER) {
+        fprintf (f, "%f", myTree->data[current].value.number);
+    }
 }

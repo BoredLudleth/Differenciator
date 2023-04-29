@@ -1,0 +1,16 @@
+without cut
+\\
+\ln(x + 1.000000) + (x) \cdot (x) + \cos(x) - \sin(x) + \tg(x) + \frac{1.000000}{x} + x^{2.000000}
+\\
+cut
+\\
+\ln(x + 1.000000) + (x) \cdot (x) + \cos(x) - \sin(x) + \tg(x) + \frac{1.000000}{x} + x^{2.000000}
+\\
+diff without cut
+\\
+(\frac{1.000000}{x + 1.000000}) \cdot (dx + 0.000000) + (dx) \cdot (x) + (dx) \cdot (x) + (0.000000 - \sin(x)) \cdot (dx) - (\cos(x)) \cdot (dx) + (\frac{1.000000}{\cos(x)^{2.000000}}) \cdot (dx) + \frac{(0.000000) \cdot (x) - (dx) \cdot (1.000000)}{(x) \cdot (x)} + (2.000000) \cdot ((x^{2.000000 - 1.000000}) \cdot (dx)) + (x^{2.000000}) \cdot ((\ln(2.000000)) \cdot (0.000000))
+\\
+diff with cut
+\\
+(\frac{1.000000}{x + 1.000000}) \cdot (dx) + (dx) \cdot (x) + (dx) \cdot (x) + (0.000000 - \sin(x)) \cdot (dx) - (\cos(x)) \cdot (dx) + (\frac{1.000000}{\cos(x)^{2.000000}}) \cdot (dx) + \frac{0.000000 - dx}{(x) \cdot (x)} + (2.000000) \cdot ((x) \cdot (dx)) + 0.000000
+\\

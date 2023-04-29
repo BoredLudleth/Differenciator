@@ -1,5 +1,6 @@
 #include "bintree.hpp"
 #include "differenciator.hpp"
+#include "flashCode.hpp"
 
 void treeCtor (struct tree* myTree, int type, union value value, FILE* old_log) {
     static int count_tree = 0;
@@ -176,8 +177,8 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
     {
         int current = myTree->free_node;
 
-        if (myTree->data[parent].lefty == 0) {
-            myTree->data[parent].lefty = myTree->free_node;
+        if (PARENTLEFT == 0) {
+            PARENTLEFT = myTree->free_node;
             
             if (type == OPERATION) {
                 myTree->data[myTree->free_node].value = value;
@@ -199,8 +200,8 @@ int treeAdd (struct tree* myTree, int parent, union value value, int type) {
             myTree->free[current] = -1;
 
             return current;
-        } else  if (myTree->data[parent].righty == 0) {
-            myTree->data[parent].righty = myTree->free_node;
+        } else  if (PARENTRIGHT == 0) {
+            PARENTRIGHT = myTree->free_node;
             
             if (type == OPERATION) {
                 myTree->data[myTree->free_node].value = value; 

@@ -1,1 +1,1 @@
-x^x^x$
+ln(x+1)+x*x+cos(x)-sin(x)+tg(x)+1/x+x^2$

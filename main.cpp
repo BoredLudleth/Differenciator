@@ -8,42 +8,40 @@ int main ()
     struct tree Tree;
     struct tree* myTree = &Tree;
 
+    FILE* f = fopen ("answer.tex", "w+");
     reccursiveReader (myTree);
+    fprintf (f, "without cut\n\\\\\n");
+    writeTex (myTree, HEAD, f);
+    fprintf (f, "\n\\\\\n");
     graph_dump (myTree);
+
+    fprintf (f, "cut\n\\\\\n");
     treeReduction (myTree);
     graph_dump (myTree);
-
-    // readTree (myTree);
-    // graph_dump (myTree);
-    // treeReduction (myTree);
-    // graph_dump (myTree);
-
-    // [#2]Solving without x with CPU
-    // FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
-    // tree_eval (myTree, Equation);
-
-    //Differenciation
-    //prev version (*(+(x)(x))(+(xD)(0)))
+    writeTex (myTree, HEAD, f);
+    fprintf (f, "\n\\\\\n");
 
     struct tree deadTree;
     struct tree* myDiffTree = &deadTree;
 
+    fprintf (f, "diff without cut\n\\\\\n");
     diffTree (myDiffTree, myTree, &(myTree->data[1]));
     graph_dump (myDiffTree);
+    writeTex (myDiffTree, HEAD, f);
+    fprintf (f, "\n\\\\\n");
 
-
+    fprintf (f, "diff with cut\n\\\\\n");
     treeReduction (myDiffTree);
-
     graph_dump (myDiffTree);
+    writeTex (myDiffTree, HEAD, f);
+    fprintf (f, "\n\\\\\n");
 
     treeDtor (myTree);
     treeDtor (myDiffTree);
-
-    //printf ("out:%d\n", getG ("0/(0+1)$"));
+    fclose (f);
 
     return 0;
 }
 // TODO flash code
-// TODO TEX-file
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

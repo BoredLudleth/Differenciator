@@ -58,4 +58,6 @@ void treeDelCurr (struct tree* myTree, int parent);
 
 int cmpFloats (float a, float b);
 
+void writeTex (struct tree* myTree, int current, FILE* f);
+
 #endif
