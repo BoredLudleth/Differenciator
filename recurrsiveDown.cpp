@@ -3,11 +3,11 @@
 
 #include "recurrsiveDown.hpp"
 
-const char* S = NULL;
+// const char* S = NULL;
 
-int p = 0;
+// int p = 0;
 
-int getG (const char* str) {
+int getG (const char* str) {//get end of str
     printf ("I'm in getG\n");
 
     S = str;
@@ -23,7 +23,7 @@ int getE () {
     printf ("I'm in getE\n");
     int val = getT ();
     
-    while (S[p] == '+' || S[p] == '-') {
+    while (S[p] == '+' || S[p] == '-') {//sum, sub
         int op = S[p];
         p++;
         int val2 = getT ();
@@ -43,7 +43,7 @@ int getT () {
     printf ("I'm in getT\n");
     int val = getP ();
     
-    while (S[p] == '*' || S[p] == '/') {
+    while (S[p] == '*' || S[p] == '/') {// mul and div
         int op = S[p];
         p++;
         int val2 = getP ();
@@ -59,8 +59,7 @@ int getT () {
 
 int getP () {
     printf ("I'm in getP\n");
-    if (S[p] == '(') {
-        printf ("I hate @all\n");
+    if (S[p] == '(') {//scopes
         p++;
         int val = getE();
         if (S[p] == ')') {
@@ -80,7 +79,7 @@ int getP () {
 }
 
 int getN () {
-    printf ("I'm in getN\n");
+    printf ("I'm in getN\n");       //get number
 
     int val = 0;
     int savP = 0;

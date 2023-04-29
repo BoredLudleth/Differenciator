@@ -1,17 +1,22 @@
 #include "bintree.hpp"
 #include "differenciator.hpp"
 
-#include "recurrsiveDown.hpp"
+#include "recurrsiveReader.hpp"
 
 int main () 
 {
     struct tree Tree;
     struct tree* myTree = &Tree;
 
-    readTree (myTree);
+    reccursiveReader (myTree);
     graph_dump (myTree);
     treeReduction (myTree);
     graph_dump (myTree);
+
+    // readTree (myTree);
+    // graph_dump (myTree);
+    // treeReduction (myTree);
+    // graph_dump (myTree);
 
     // [#2]Solving without x with CPU
     // FILE* Equation = fopen ("CPU/asmeq.asm", "w+");
@@ -39,8 +44,6 @@ int main ()
     return 0;
 }
 // TODO flash code
-// TODO reccursive reader whould be something like on print left_child -> current -> right child
-// TODO integrate checks? recursion is a problem would be slower... and with exit... +
 // TODO TEX-file
 
 //TEST[#1] (+(*(+(x)(y))(*(7)(8)))(-(/(3)(11))(11)))

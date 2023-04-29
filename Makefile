@@ -16,11 +16,11 @@ bintree.o: bintree.cpp
 differenciator.o: differenciator.cpp
 	g++ $(CFLAGS) differenciator.cpp -o differenciator.o
 
-recurrsiveDown.o: recurrsiveDown.cpp
-	g++ $(CFLAGS) recurrsiveDown.cpp -o recurrsiveDown.o
+recurrsiveReader.o: recurrsiveReader.cpp
+	g++ $(CFLAGS) recurrsiveReader.cpp -o recurrsiveReader.o
 
-run_bintree: main.o bintree.o differenciator.o recurrsiveDown.o
-	g++ main.o bintree.o differenciator.o recurrsiveDown.o -o main
+run_bintree: main.o bintree.o differenciator.o recurrsiveReader.o
+	g++ main.o bintree.o differenciator.o recurrsiveReader.o -o main
 
 run_programm:
 	./main

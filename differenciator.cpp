@@ -846,12 +846,16 @@ struct tree* treeCut (struct tree* myDiffTree, int parent) {
             deleteSubTree (myDiffTree, myDiffTree->data[parent].righty);
             myDiffTree->data[parent].type_of_value = NUMBER;
             myDiffTree->data[parent].value.number = 0;
+            myDiffTree->data[parent].lefty = 0;
+            myDiffTree->data[parent].righty = 0;
         }
         if (myDiffTree->data[myDiffTree->data[parent].righty].type_of_value == NUMBER && cmpFloats(myDiffTree->data[myDiffTree->data[parent].righty].value.number, 0)) {
             deleteSubTree (myDiffTree, myDiffTree->data[parent].lefty);
             deleteSubTree (myDiffTree, myDiffTree->data[parent].righty);
             myDiffTree->data[parent].type_of_value = NUMBER;
             myDiffTree->data[parent].value.number = 0;
+            myDiffTree->data[parent].lefty = 0;
+            myDiffTree->data[parent].righty = 0;
         }
     }
     }
